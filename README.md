@@ -10,7 +10,7 @@ A modern download portal for customers, developed with React, Vite and Netlify F
 - **Access Control**: Users only see files assigned to them
 - **Modern Design**: Responsive UI in Byght style
 
-## 📋 Prerequisites
+## 📋 Prerequisitess
 
 - Node.js 18 or higher
 - npm or yarn
