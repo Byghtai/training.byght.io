@@ -1,0 +1,15 @@
+/* Reduzierte App Styles */
+#root {
+  min-height: 100vh;
+  width: 100%;
+}
+
+/* Logo Styles */
+.logo {
+  height: 4rem;
+  transition: transform 200ms ease-in-out;
+}
+
+.logo:hover {
+  transform: scale(1.05);
+}

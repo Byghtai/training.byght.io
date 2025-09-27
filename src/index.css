@@ -1,0 +1,57 @@
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap');
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  body {
+    @apply antialiased font-['Inter'] bg-byght-lightgray text-byght-gray;
+  }
+}
+
+@layer components {
+  /* Reduzierte Button Styles */
+  .btn-primary {
+    @apply bg-byght-turquoise hover:bg-byght-turquoise/90 text-white font-medium py-2.5 px-5 rounded-lg transition-colors duration-200 focus:outline-none focus:ring-2 focus:ring-byght-turquoise/50 focus:ring-offset-2;
+  }
+  
+  .btn-secondary {
+    @apply bg-byght-gray hover:bg-byght-gray/90 text-white font-medium py-2.5 px-5 rounded-lg transition-colors duration-200 focus:outline-none focus:ring-2 focus:ring-byght-gray/50 focus:ring-offset-2;
+  }
+  
+  .btn-accent {
+    @apply bg-byght-yellow hover:bg-byght-yellow/90 text-byght-gray font-medium py-2.5 px-5 rounded-lg transition-colors duration-200 focus:outline-none focus:ring-2 focus:ring-byght-yellow/50 focus:ring-offset-2;
+  }
+  
+  .btn-danger {
+    @apply bg-red-500 hover:bg-red-600 text-white font-medium py-2.5 px-5 rounded-lg transition-colors duration-200 focus:outline-none focus:ring-2 focus:ring-red-500/50 focus:ring-offset-2;
+  }
+  
+  /* Reduzierte Input Fields */
+  .input-field {
+    @apply w-full px-4 py-2.5 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-byght-turquoise/50 focus:border-byght-turquoise transition-colors duration-200 bg-white text-byght-gray;
+  }
+  
+  /* Reduzierte Card Design */
+  .card {
+    @apply bg-white rounded-lg shadow-sm p-6 border border-gray-200;
+  }
+  
+  /* Minimaler Scrollbar */
+  ::-webkit-scrollbar {
+    width: 6px;
+    height: 6px;
+  }
+  
+  ::-webkit-scrollbar-track {
+    @apply bg-gray-100;
+  }
+  
+  ::-webkit-scrollbar-thumb {
+    @apply bg-byght-gray/50 rounded;
+  }
+  
+  ::-webkit-scrollbar-thumb:hover {
+    @apply bg-byght-gray/70;
+  }
+}

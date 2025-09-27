@@ -1,0 +1,25 @@
+[
+  {
+      "AllowedHeaders": [
+          "*"
+      ],
+      "AllowedMethods": [
+          "GET",
+          "PUT",
+          "POST",
+          "DELETE",
+          "HEAD"
+      ],
+      "AllowedOrigins": [
+          "https://portal-byght-io.netlify.app",
+          "https://portal.byght.io"
+      ],
+      "ExposeHeaders": [
+          "ETag",
+          "Content-Length",
+          "Content-Type",
+          "Last-Modified"
+      ],
+      "MaxAgeSeconds": 3600
+  }
+]
