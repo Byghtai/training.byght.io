@@ -1,11 +1,10 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useAuth } from '../contexts/AuthContext';
-import { Lock, User, AlertCircle, Eye, EyeOff } from 'lucide-react';
+import { Lock, AlertCircle, Eye, EyeOff } from 'lucide-react';
 import ByghtLogo from '../assets/byght-logo.svg';
 
 const Login = () => {
-  const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
   const [showPassword, setShowPassword] = useState(false);
   const [error, setError] = useState('');
@@ -18,12 +17,12 @@ const Login = () => {
     setError('');
     setLoading(true);
 
-    const result = await login(username, password);
+    const result = await login(password);
     
     if (result.success) {
       navigate('/dashboard');
     } else {
-      setError(result.error || 'Login failed');
+      setError(result.error || 'Login fehlgeschlagen');
     }
     
     setLoading(false);
@@ -56,28 +55,8 @@ const Login = () => {
 
           <form onSubmit={handleSubmit} className="space-y-4">
             <div>
-              <label htmlFor="username" className="block text-sm font-medium text-byght-gray mb-1.5">
-                Username
-              </label>
-              <div className="relative">
-                <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
-                  <User className="h-4 w-4 text-gray-400" />
-                </div>
-                <input
-                  id="username"
-                  type="text"
-                  value={username}
-                  onChange={(e) => setUsername(e.target.value)}
-                  className="input-field pl-10"
-                  placeholder="Your username"
-                  required
-                />
-              </div>
-            </div>
-
-            <div>
               <label htmlFor="password" className="block text-sm font-medium text-byght-gray mb-1.5">
-                Password
+                Training Passwort
               </label>
               <div className="relative">
                 <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
@@ -89,7 +68,7 @@ const Login = () => {
                   value={password}
                   onChange={(e) => setPassword(e.target.value)}
                   className="input-field pl-10 pr-10"
-                  placeholder="Your password"
+                  placeholder="Ihr Training-Passwort"
                   required
                 />
                 <button
@@ -110,10 +89,10 @@ const Login = () => {
               {loading ? (
                 <div className="flex items-center justify-center gap-2">
                   <div className="animate-spin rounded-full h-4 w-4 border-b-2 border-white"></div>
-                  <span>Signing in...</span>
+                  <span>Anmelden...</span>
                 </div>
               ) : (
-                'Sign In'
+                'Anmelden'
               )}
             </button>
           </form>

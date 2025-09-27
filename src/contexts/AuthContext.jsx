@@ -16,7 +16,12 @@ export const AuthProvider = ({ children }) => {
       try {
         // Decode JWT to get user info
         const payload = JSON.parse(atob(token.split('.')[1]));
-        setUser({ username: payload.username, id: payload.userId });
+        setUser({ 
+          username: payload.username, 
+          id: payload.userId,
+          passwordId: payload.passwordId,
+          expiryDate: payload.expiryDate
+        });
         setIsAdmin(payload.isAdmin || false);
       } catch (error) {
         console.error('Invalid token:', error);
@@ -26,12 +31,12 @@ export const AuthProvider = ({ children }) => {
     setLoading(false);
   }, []);
 
-  const login = async (username, password) => {
+  const login = async (password) => {
     try {
       const response = await fetch('/.netlify/functions/auth-login', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ username, password }),
+        body: JSON.stringify({ password }),
       });
 
       const data = await response.json();
@@ -41,7 +46,12 @@ export const AuthProvider = ({ children }) => {
       }
 
       Cookies.set('auth_token', data.token, { expires: 7 });
-      setUser({ username: data.username, id: data.userId });
+      setUser({ 
+        username: data.username, 
+        id: data.userId,
+        passwordId: data.passwordId,
+        expiryDate: data.expiryDate
+      });
       setIsAdmin(data.isAdmin || false);
       return { success: true };
     } catch (error) {

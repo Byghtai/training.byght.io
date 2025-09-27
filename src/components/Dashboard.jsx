@@ -1,13 +1,13 @@
 import React, { useState, useEffect } from 'react';
 import { useAuth } from '../contexts/AuthContext';
 import { useNavigate } from 'react-router-dom';
-import { Download, FileText, LogOut, User, Folder, Calendar, HardDrive, Settings, AlertCircle, Menu, X, Cloud, Key, CheckCircle, Upload, Users, FileCheck, HelpCircle, Mail, ChevronRight, ChevronDown } from 'lucide-react';
+import { Download, FileText, LogOut, User, Folder, HardDrive, AlertCircle, Menu, X, Cloud, Key, CheckCircle, Upload, Users, FileCheck, HelpCircle, Mail, ChevronRight, ChevronDown } from 'lucide-react';
 import ByghtLogo from '../assets/byght-logo.svg';
 import Cookies from 'js-cookie';
 import { downloadFileFromS3 } from '../utils/s3Download';
 
 const Dashboard = () => {
-  const { user, logout, isAdmin } = useAuth();
+  const { user, logout } = useAuth();
   const navigate = useNavigate();
   const [files, setFiles] = useState([]);
   const [loading, setLoading] = useState(true);
@@ -141,15 +141,6 @@ const Dashboard = () => {
             
             {/* Desktop Navigation */}
             <div className="hidden sm:flex items-center space-x-4">
-              {isAdmin && (
-                <button
-                  onClick={() => navigate('/admin')}
-                  className="flex items-center gap-2 text-byght-gray hover:text-byght-turquoise transition-colors"
-                >
-                  <Settings size={18} />
-                  <span>Admin</span>
-                </button>
-              )}
               <div className="flex items-center gap-2 text-byght-gray">
                 <User size={18} />
                 <span className="font-medium">{user?.username}</span>
@@ -178,18 +169,6 @@ const Dashboard = () => {
           {mobileMenuOpen && (
             <div className="sm:hidden pb-4 border-t border-gray-200">
               <div className="flex flex-col space-y-3 pt-4">
-                {isAdmin && (
-                  <button
-                    onClick={() => {
-                      navigate('/admin');
-                      setMobileMenuOpen(false);
-                    }}
-                    className="flex items-center gap-2 text-byght-gray hover:text-byght-turquoise transition-colors py-2"
-                  >
-                    <Settings size={18} />
-                    Admin Panel
-                  </button>
-                )}
                 <div className="flex items-center gap-2 text-byght-gray py-2">
                   <User size={18} />
                   <span className="font-medium">{user?.username}</span>

@@ -117,6 +117,9 @@ export async function initDatabase() {
       ON file_user_assignments(file_id)
     `);
 
+    // Training-Passwörter-Tabelle (bereits vorhanden)
+    // Diese Tabelle wird von externen Systemen verwaltet
+
   } catch (error) {
     console.error('Database initialization failed:', error);
     throw error;
@@ -1041,5 +1044,46 @@ export async function removeDescriptionColumn() {
     client.release();
   }
 }
+
+// Training-Passwort erstellen (nicht verwendet - Passwörter werden extern verwaltet)
+// Diese Funktion wird nicht verwendet, da Passwörter von externen Systemen erstellt werden
+
+// Training-Passwort validieren
+export async function validateTrainingPassword(password) {
+  const client = await pool.connect();
+  try {
+    // Alle gültigen Passwörter abrufen (nicht abgelaufen)
+    const result = await client.query(
+      'SELECT id, password_hash, expiry_date FROM training_passwords WHERE expiry_date >= CURRENT_DATE ORDER BY created_at DESC'
+    );
+    
+    if (result.rows.length === 0) {
+      return { valid: false, error: 'Keine gültigen Passwörter verfügbar' };
+    }
+    
+    // Passwort gegen alle gültigen Passwörter prüfen
+    const bcrypt = await import('bcryptjs');
+    for (const row of result.rows) {
+      const isValid = await bcrypt.default.compare(password, row.password_hash);
+      if (isValid) {
+        return { 
+          valid: true, 
+          passwordId: row.id,
+          expiryDate: row.expiry_date
+        };
+      }
+    }
+    
+    return { valid: false, error: 'Ungültiges Passwort' };
+  } catch (error) {
+    console.error('Database error in validateTrainingPassword:', error);
+    throw error;
+  } finally {
+    client.release();
+  }
+}
+
+// Alle Training-Passwörter abrufen (nicht verwendet - nur für Admin-Zwecke)
+// Diese Funktionen werden nicht verwendet, da Passwörter extern verwaltet werden
 
 export { pool };

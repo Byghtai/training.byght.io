@@ -1,5 +1,5 @@
 import jwt from 'jsonwebtoken';
-import { findUserByUsername, initDatabase } from './db.js';
+import { validateTrainingPassword, initDatabase } from './db.js';
 
 const JWT_SECRET = process.env.JWT_SECRET;
 if (!JWT_SECRET) {
@@ -20,48 +20,25 @@ export default async (req, context) => {
     await initDatabase();
     console.log('Database initialization completed');
 
-    const { username, password } = await req.json();
+    const { password } = await req.json();
 
-    // Search for user in database
-    const user = await findUserByUsername(username);
-    if (!user) {
-      return new Response(JSON.stringify({ error: 'Invalid login credentials' }), {
+    // Validate training password
+    const validation = await validateTrainingPassword(password);
+    if (!validation.valid) {
+      return new Response(JSON.stringify({ error: validation.error }), {
         status: 401,
         headers: { 'Content-Type': 'application/json' }
       });
     }
 
-    // Verify password
-    const bcrypt = await import('bcryptjs');
-    const isValidPassword = await bcrypt.default.compare(password, user.password_hash);
-    if (!isValidPassword) {
-      return new Response(JSON.stringify({ error: 'Invalid login credentials' }), {
-        status: 401,
-        headers: { 'Content-Type': 'application/json' }
-      });
-    }
-
-    // Check expiry date for standard users
-    if (!user.isAdmin && user.expiry_date) {
-      const today = new Date();
-      const expiryDate = new Date(user.expiry_date);
-      
-      if (today > expiryDate) {
-        return new Response(JSON.stringify({ 
-          error: 'Your user account has expired. Please contact the administrator.' 
-        }), {
-          status: 403,
-          headers: { 'Content-Type': 'application/json' }
-        });
-      }
-    }
-
-    // Generate JWT token
+    // Generate JWT token for training access
     const token = jwt.sign(
       { 
-        userId: user.id, 
-        username: user.username,
-        isAdmin: user.isAdmin 
+        userId: 'training_user',
+        username: 'Training User',
+        isAdmin: false,
+        passwordId: validation.passwordId,
+        expiryDate: validation.expiryDate
       },
       JWT_SECRET,
       { expiresIn: '7d' }
@@ -69,9 +46,11 @@ export default async (req, context) => {
 
     return new Response(JSON.stringify({
       token,
-      username: user.username,
-      userId: user.id,
-      isAdmin: user.isAdmin
+      username: 'Training User',
+      userId: 'training_user',
+      isAdmin: false,
+      passwordId: validation.passwordId,
+      expiryDate: validation.expiryDate
     }), {
       status: 200,
       headers: { 'Content-Type': 'application/json' }
