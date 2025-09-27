@@ -1,123 +1,20 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import { useAuth } from '../contexts/AuthContext';
 import { useNavigate } from 'react-router-dom';
-import { Download, FileText, LogOut, User, Folder, HardDrive, AlertCircle, Menu, X, Cloud, Key, CheckCircle, Upload, Users, FileCheck, HelpCircle, Mail, ChevronRight, ChevronDown } from 'lucide-react';
+import { LogOut, User, Menu, X, Cloud, Key, CheckCircle, Upload, Users, FileCheck, HelpCircle, Mail, ChevronRight, ChevronDown, Settings } from 'lucide-react';
 import ByghtLogo from '../assets/byght-logo.svg';
-import Cookies from 'js-cookie';
-import { downloadFileFromS3 } from '../utils/s3Download';
 
 const Dashboard = () => {
   const { user, logout } = useAuth();
   const navigate = useNavigate();
-  const [files, setFiles] = useState([]);
-  const [loading, setLoading] = useState(true);
-  const [error, setError] = useState('');
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
-  
-
   
   // FAQ collapse states
   const [expandedFaq, setExpandedFaq] = useState(null);
 
-  useEffect(() => {
-    fetchUserFiles();
-  }, []);
-
-  const fetchUserFiles = async () => {
-    try {
-      const token = Cookies.get('auth_token');
-      const response = await fetch('/.netlify/functions/files-list', {
-        headers: {
-          'Authorization': `Bearer ${token}`,
-        },
-      });
-
-      if (!response.ok) {
-        throw new Error('Error fetching files');
-      }
-
-      const data = await response.json();
-      setFiles(data.files || []);
-    } catch (error) {
-      setError(error.message);
-    } finally {
-      setLoading(false);
-    }
-  };
-
-  const handleDownload = async (fileId, filename, fileSize = 0) => {
-    try {
-      const token = Cookies.get('auth_token');
-      
-      if (!token) {
-        throw new Error('Nicht authentifiziert. Bitte melden Sie sich erneut an.');
-      }
-      
-      // Zeige Download-Status (optional)
-      console.log(`Starte Download: ${filename}`);
-      
-
-      
-      // Download über S3 Presigned URL
-      const success = await downloadFileFromS3(fileId, filename, token);
-      
-      if (success) {
-        console.log(`✅ Download erfolgreich: ${filename}`);
-      } else {
-        throw new Error('Download konnte nicht gestartet werden');
-      }
-    } catch (error) {
-      console.error('❌ Download-Fehler:', error);
-      alert(`Download fehlgeschlagen: ${error.message}`);
-    }
-  };
-
   const handleLogout = () => {
     logout();
     navigate('/login');
-  };
-
-  const formatFileSize = (bytes) => {
-    if (bytes === 0) return '0 Bytes';
-    const k = 1024;
-    const sizes = ['Bytes', 'KB', 'MB', 'GB'];
-    const i = Math.floor(Math.log(bytes) / Math.log(k));
-    return Math.round(bytes / Math.pow(k, i) * 100) / 100 + ' ' + sizes[i];
-  };
-
-  const formatDate = (dateString) => {
-    const date = new Date(dateString);
-    return date.toLocaleDateString('de-DE', {
-      day: '2-digit',
-      month: '2-digit',
-      year: 'numeric',
-      hour: '2-digit',
-      minute: '2-digit'
-    });
-  };
-
-  const truncateFilename = (filename, maxLength = 35) => {
-    if (filename.length <= maxLength) return filename;
-    
-    // Find the last dot to preserve file extension
-    const lastDotIndex = filename.lastIndexOf('.');
-    if (lastDotIndex === -1) {
-      // No extension, just truncate
-      return filename.substring(0, maxLength - 3) + '...';
-    }
-    
-    const extension = filename.substring(lastDotIndex);
-    const nameWithoutExtension = filename.substring(0, lastDotIndex);
-    
-    // Calculate how much space we have for the name part
-    const availableSpace = maxLength - extension.length - 3; // 3 for "..."
-    
-    if (availableSpace <= 0) {
-      // Extension is too long, just truncate everything
-      return filename.substring(0, maxLength - 3) + '...';
-    }
-    
-    return nameWithoutExtension.substring(0, availableSpace) + '...' + extension;
   };
 
 
@@ -252,133 +149,6 @@ const Dashboard = () => {
                 </div>
               </div>
 
-              {/* Dateitabelle */}
-              <div className="ml-14 mb-6">
-
-                {loading ? (
-                  <div className="flex justify-center py-8 bg-gray-50 rounded-lg">
-                    <div className="text-center">
-                      <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-byght-turquoise mx-auto mb-4"></div>
-                      <p className="text-gray-600">Lade Dateien...</p>
-                    </div>
-                  </div>
-                ) : error ? (
-                  <div className="bg-red-50 border border-red-200 rounded-lg p-4">
-                    <div className="flex items-center gap-3 text-red-700">
-                      <AlertCircle size={20} />
-                      <span>{error}</span>
-                    </div>
-                  </div>
-                ) : files.length === 0 ? (
-                  <div className="bg-gray-50 rounded-lg text-center py-8">
-                    <div className="w-16 h-16 bg-byght-turquoise/10 rounded-full flex items-center justify-center mx-auto mb-4">
-                      <Folder className="h-8 w-8 text-byght-turquoise" />
-                    </div>
-                    <h3 className="text-lg font-semibold text-byght-gray mb-2">
-                      No files available
-                    </h3>
-                    <p className="text-gray-600 text-sm">
-                      Files will appear here once they are made available to you.
-                    </p>
-                  </div>
-                ) : (
-                  <div className="bg-white border border-gray-200 rounded-lg overflow-hidden">
-                    <div className="overflow-x-auto">
-                      <table className="min-w-full divide-y divide-gray-200">
-                        <thead className="bg-gray-50">
-                          <tr>
-                            <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                              Filename
-                            </th>
-                            <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider hidden lg:table-cell">
-                              Product
-                            </th>
-                            <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider hidden lg:table-cell">
-                              Version
-                            </th>
-                            <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider hidden lg:table-cell">
-                              Language
-                            </th>
-                            <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider hidden lg:table-cell">
-                              Confluence
-                            </th>
-                            <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider hidden sm:table-cell">
-                              Size
-                            </th>
-                            <th className="px-4 py-3 text-right text-xs font-medium text-gray-500 uppercase tracking-wider">
-                              Actions
-                            </th>
-                          </tr>
-                        </thead>
-                        <tbody className="bg-white divide-y divide-gray-200">
-                          {files.map((file) => (
-                            <tr key={file.id} className="hover:bg-gray-50 transition-colors">
-                              <td className="px-4 py-3 whitespace-nowrap">
-                                <div className="flex items-center">
-                                  <div className="w-8 h-8 bg-byght-turquoise/10 rounded-lg flex items-center justify-center mr-3 flex-shrink-0">
-                                    <FileText className="h-4 w-4 text-byght-turquoise" />
-                                  </div>
-                                  <div>
-                                    <div 
-                                      className="text-sm font-medium text-byght-gray" 
-                                      title={file.filename}
-                                    >
-                                      {truncateFilename(file.filename)}
-                                    </div>
-                                    <div className="lg:hidden text-xs text-gray-500 mt-1">
-                                      {[file.productLabel, file.versionLabel, file.languageLabel, file.confluenceLabel].filter(Boolean).join(' • ')}
-                                    </div>
-                                  </div>
-                                </div>
-                              </td>
-                              <td className="px-4 py-3 whitespace-nowrap hidden lg:table-cell">
-                                <span className="text-sm text-gray-900">
-                                  {file.productLabel || '-'}
-                                </span>
-                              </td>
-                              <td className="px-4 py-3 whitespace-nowrap hidden lg:table-cell">
-                                <span className="text-sm text-gray-900">
-                                  {file.versionLabel || '-'}
-                                </span>
-                              </td>
-                              <td className="px-4 py-3 whitespace-nowrap hidden lg:table-cell">
-                                <span className="text-sm text-gray-900">
-                                  {file.languageLabel || '-'}
-                                </span>
-                              </td>
-                              <td className="px-4 py-3 whitespace-nowrap hidden lg:table-cell">
-                                <span className="text-sm text-gray-900">
-                                  {file.confluenceLabel || '-'}
-                                </span>
-                              </td>
-                              <td className="px-4 py-3 whitespace-nowrap hidden sm:table-cell">
-                                <div className="flex items-center text-sm text-gray-600">
-                                  <HardDrive className="h-3 w-3 text-gray-400 mr-1" />
-                                  {formatFileSize(file.size)}
-                                </div>
-                              </td>
-                              <td className="px-4 py-3 whitespace-nowrap text-right">
-                                <button
-                                  onClick={() => handleDownload(file.id, file.filename, file.size)}
-                                  className="text-blue-600 hover:text-blue-800 transition-colors p-1"
-                                  title="Download"
-                                >
-                                  <Download size={14} />
-                                </button>
-                              </td>
-                            </tr>
-                          ))}
-                        </tbody>
-                      </table>
-                    </div>
-                    {files.length > 0 && (
-                      <div className="px-4 py-3 bg-gray-50 text-xs text-gray-600 border-t border-gray-200">
-                        Showing {files.length} files
-                      </div>
-                    )}
-                  </div>
-                )}
-              </div>
 
               {/* Step 2 */}
               <div className="flex gap-4">
