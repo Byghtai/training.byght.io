@@ -46,8 +46,9 @@ export default async (request, context) => {
       });
     }
 
-    // Erstelle eine öffentliche URL für das Video
-    const videoUrl = await store.get('einfuehrung-test.mp4', { type: 'url' });
+    // Da type: 'url' nicht funktioniert, erstellen wir eine alternative Lösung
+    // Wir geben eine URL zurück, die direkt auf unsere Video-Stream-Funktion zeigt
+    const videoUrl = `${process.env.URL || 'https://training.byght.io'}/.netlify/functions/stream-video`;
 
     return new Response(JSON.stringify({ 
       success: true, 
