@@ -23,7 +23,7 @@ export default async (request, context) => {
   }
 
   try {
-    // Erstelle einen Blob Store für Videos
+    // Erstelle Netlify Blob Store für Training-Videos
     const store = getStore({
       name: 'training-videos',
       consistency: 'strong'
@@ -44,7 +44,7 @@ export default async (request, context) => {
 
     // Lese das Video als Buffer
     const videoBuffer = fs.readFileSync(videoPath);
-    const fileName = `einfuehrung-test-${Date.now()}.mp4`;
+    const fileName = `einfuehrung-test-initial-${Date.now()}.mp4`;
 
     // Speichere das Video im Netlify Blob Store
     await store.set(fileName, videoBuffer, {
@@ -53,18 +53,18 @@ export default async (request, context) => {
         contentType: 'video/mp4',
         size: videoBuffer.length,
         uploadedAt: new Date().toISOString(),
-        source: 'local-file'
+        source: 'local-file-initial-load'
       }
     });
 
-    // Erstelle eine öffentliche URL für das Video
-    const videoUrl = await store.getUrl(fileName);
+    // Hole die URL für das gespeicherte Video
+    const videoData = await store.getWithMetadata(fileName, { type: 'url' });
 
     return new Response(JSON.stringify({ 
       success: true, 
       fileName,
-      videoUrl,
-      message: 'Lokales Video erfolgreich in Netlify Blob Storage geladen',
+      videoUrl: videoData.url,
+      message: 'Lokales Video erfolgreich in Netlify Blob Storage geladen!',
       size: videoBuffer.length
     }), {
       status: 200,

@@ -20,6 +20,14 @@ const VideoSection = () => {
       
       if (data.success && data.videoUrl) {
         setVideoUrl(data.videoUrl);
+        // Zeige Info-Message wenn lokales Video verwendet wird
+        if (data.metadata?.source?.includes('local-fallback')) {
+          setUploadStatus({ 
+            type: 'info', 
+            message: 'Lokales Video angezeigt. Klicken Sie auf "Lokales Video laden" für Blob Storage.' 
+          });
+          setTimeout(() => setUploadStatus(null), 5000);
+        }
       }
     } catch (error) {
       console.error('Fehler beim Laden des Videos:', error);
@@ -52,6 +60,7 @@ const VideoSection = () => {
       setIsLoading(false);
     }
   };
+
 
   const handleFileUpload = async (event) => {
     const file = event.target.files[0];
@@ -166,15 +175,21 @@ const VideoSection = () => {
         <div className={`p-4 rounded-lg flex items-center gap-3 ${
           uploadStatus.type === 'success' 
             ? 'bg-green-50 border border-green-200' 
+            : uploadStatus.type === 'info'
+            ? 'bg-blue-50 border border-blue-200'
             : 'bg-red-50 border border-red-200'
         }`}>
           {uploadStatus.type === 'success' ? (
             <CheckCircle className="text-green-500 flex-shrink-0" size={20} />
+          ) : uploadStatus.type === 'info' ? (
+            <Loader className="animate-spin text-blue-500 flex-shrink-0" size={20} />
           ) : (
             <AlertCircle className="text-red-500 flex-shrink-0" size={20} />
           )}
           <span className={`${
-            uploadStatus.type === 'success' ? 'text-green-700' : 'text-red-700'
+            uploadStatus.type === 'success' ? 'text-green-700' 
+            : uploadStatus.type === 'info' ? 'text-blue-700'
+            : 'text-red-700'
           }`}>
             {uploadStatus.message}
           </span>
@@ -189,7 +204,7 @@ const VideoSection = () => {
               Video verwalten
             </h4>
             <p className="text-sm text-gray-600">
-              Laden Sie eine neue Version hoch oder verwenden Sie das lokale Video.
+              Laden Sie das lokale Video in Blob Storage oder laden Sie eine neue Version hoch.
             </p>
           </div>
           <div className="flex gap-3">

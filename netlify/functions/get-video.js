@@ -21,7 +21,7 @@ export default async (request, context) => {
   }
 
   try {
-    // Erstelle einen Blob Store für Videos
+    // Erstelle Netlify Blob Store für Training-Videos
     const store = getStore({
       name: 'training-videos',
       consistency: 'strong'
@@ -35,12 +35,20 @@ export default async (request, context) => {
       blob.key && blob.key.includes('einfuehrung-test') && blob.key.endsWith('.mp4')
     );
     
-    if (einfuehrungVideos.length === 0) {
+    if (einfuhrungVideos.length === 0) {
+      // Fallback auf lokales Video, falls keines im Blob Storage gefunden wird
       return new Response(JSON.stringify({ 
-        success: false, 
-        message: 'Kein Einführungsvideo in Netlify Blob Storage gefunden' 
+        success: true, 
+        videoUrl: '/assets/Einfuehrung-test.mp4',
+        fileName: 'Einfuehrung-test.mp4',
+        metadata: {
+          originalName: 'Einfuehrung-test.mp4',
+          contentType: 'video/mp4',
+          source: 'local-fallback'
+        },
+        message: 'Lokales Video verwendet (noch kein Upload in Blob Storage)'
       }), {
-        status: 404,
+        status: 200,
         headers: { ...corsHeaders, 'Content-Type': 'application/json' }
       });
     }
@@ -51,13 +59,16 @@ export default async (request, context) => {
     );
 
     const latestVideo = einfuhrungVideos[0];
-    const videoUrl = await store.getUrl(latestVideo.key);
+    
+    // Hole das Video mit URL aus dem Blob Store
+    const videoData = await store.getWithMetadata(latestVideo.key, { type: 'url' });
 
     return new Response(JSON.stringify({ 
       success: true, 
-      videoUrl,
+      videoUrl: videoData.url,
       fileName: latestVideo.key,
-      metadata: latestVideo.metadata
+      metadata: latestVideo.metadata,
+      message: 'Video aus Netlify Blob Storage geladen'
     }), {
       status: 200,
       headers: { ...corsHeaders, 'Content-Type': 'application/json' }
@@ -65,11 +76,20 @@ export default async (request, context) => {
 
   } catch (error) {
     console.error('Get video error:', error);
+    
+    // Fallback auf lokales Video bei Fehlern
     return new Response(JSON.stringify({ 
-      error: 'Failed to get video', 
-      details: error.message 
+      success: true, 
+      videoUrl: '/assets/Einfuehrung-test.mp4',
+      fileName: 'Einfuehrung-test.mp4',
+      metadata: {
+        originalName: 'Einfuehrung-test.mp4',
+        contentType: 'video/mp4',
+        source: 'local-fallback'
+      },
+      message: 'Lokales Video verwendet (Blob Storage-Fehler)'
     }), {
-      status: 500,
+      status: 200,
       headers: { ...corsHeaders, 'Content-Type': 'application/json' }
     });
   }
