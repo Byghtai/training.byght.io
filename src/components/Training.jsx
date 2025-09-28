@@ -98,9 +98,7 @@ const Training = () => {
               <Upload className="text-byght-turquoise" size={28} />
               Introduction Video
             </h2>
-            <div className="bg-gray-100 rounded-lg p-8 text-center">
-              <VideoSection />
-            </div>
+            <VideoSection />
           </div>
 
           {/* Learning Objectives */}
