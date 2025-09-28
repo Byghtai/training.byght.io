@@ -54,7 +54,17 @@ const VideoSection = () => {
         // Direkter Video-Response
         console.log('Received direct video response');
         const blob = await response.blob();
-        const videoUrl = URL.createObjectURL(blob);
+        console.log('Blob created, size:', blob.size, 'type:', blob.type);
+        
+        // Debug: Prüfe die ersten Bytes des Blobs
+        const arrayBuffer = await blob.arrayBuffer();
+        const firstBytes = new Uint8Array(arrayBuffer.slice(0, 32));
+        const headerHex = Array.from(firstBytes).map(b => b.toString(16).padStart(2, '0')).join(' ');
+        console.log('Blob first 32 bytes (hex):', headerHex);
+        
+        // Erstelle neuen Blob mit explizitem MIME-Type
+        const videoBlob = new Blob([arrayBuffer], { type: 'video/mp4' });
+        const videoUrl = URL.createObjectURL(videoBlob);
         console.log('Created blob URL:', videoUrl);
         setVideoUrl(videoUrl);
       } else {
@@ -91,15 +101,32 @@ const VideoSection = () => {
               console.error('Video error:', e);
               console.error('Video URL that failed:', videoUrl);
               console.error('Video element error details:', e.target.error);
+              if (e.target.error) {
+                console.error('Error code:', e.target.error.code);
+                console.error('Error message:', e.target.error.message);
+              }
             }}
             onLoadedData={() => console.log('Video data loaded')}
             onLoadedMetadata={() => console.log('Video metadata loaded')}
+            onProgress={() => console.log('Video loading progress')}
+            onSuspend={() => console.log('Video loading suspended')}
+            onStalled={() => console.log('Video loading stalled')}
             src={videoUrl}
+            preload="metadata"
           >
             Your browser does not support the video element.
           </video>
-          <div className="absolute bottom-2 right-2 text-white text-xs bg-black bg-opacity-50 px-2 py-1 rounded">
-            URL: {videoUrl}
+          <div className="absolute bottom-2 right-2 text-white text-xs bg-black bg-opacity-50 px-2 py-1 rounded max-w-xs truncate">
+            {videoUrl && videoUrl.startsWith('blob:') ? 'Blob URL' : videoUrl}
+          </div>
+          <div className="absolute bottom-2 left-2 text-white text-xs bg-black bg-opacity-50 px-2 py-1 rounded">
+            <a 
+              href="/api/get-video" 
+              download="einfuehrung-test.mp4"
+              className="text-blue-300 hover:text-blue-100"
+            >
+              Download Test
+            </a>
           </div>
         </div>
       ) : (
