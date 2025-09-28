@@ -27,10 +27,10 @@ export default async (request, context) => {
       consistency: 'strong'
     });
 
-    // Lade das spezifische Video "einfuehrung-test.mp4"
-    const videoData = await store.getWithMetadata('einfuehrung-test.mp4', { type: 'url' });
+    // Prüfe ob das Video existiert
+    const videoExists = await store.get('einfuehrung-test.mp4');
     
-    if (!videoData) {
+    if (!videoExists) {
       return new Response(JSON.stringify({ 
         success: false, 
         error: 'Video not found in Blob Storage',
@@ -41,11 +41,13 @@ export default async (request, context) => {
       });
     }
 
+    // Erstelle eine öffentliche URL für das Video
+    const videoUrl = await store.get('einfuehrung-test.mp4', { type: 'url' });
+
     return new Response(JSON.stringify({ 
       success: true, 
-      videoUrl: videoData.url,
+      videoUrl: videoUrl,
       fileName: 'einfuehrung-test.mp4',
-      metadata: videoData.metadata,
       message: 'Video aus Netlify Blob Storage geladen'
     }), {
       status: 200,
