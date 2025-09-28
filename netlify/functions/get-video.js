@@ -46,9 +46,18 @@ export default async (request, context) => {
       });
     }
 
-    // Da type: 'url' nicht funktioniert, erstellen wir eine alternative Lösung
-    // Wir geben eine URL zurück, die direkt auf unsere Video-Stream-Funktion zeigt
-    const videoUrl = `${process.env.URL || 'https://training.byght.io'}/.netlify/functions/stream-video`;
+    // Alternative Ansätze für Video-URL
+    let videoUrl;
+    
+    try {
+      // Versuche erst den direkten URL-Ansatz (falls es doch funktioniert)
+      videoUrl = await store.get('einfuehrung-test.mp4', { type: 'url' });
+      console.log('Direct URL approach worked:', videoUrl);
+    } catch (urlError) {
+      console.log('Direct URL failed, using stream function:', urlError.message);
+      // Fallback zur Stream-Funktion
+      videoUrl = `${process.env.URL || 'https://training.byght.io'}/.netlify/functions/stream-video`;
+    }
 
     return new Response(JSON.stringify({ 
       success: true, 

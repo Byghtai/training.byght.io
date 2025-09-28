@@ -27,53 +27,57 @@ export default async (request, context) => {
       consistency: 'strong'
     });
 
-    // Lade das Video als ArrayBuffer
-    const videoData = await store.get('einfuehrung-test.mp4', { type: 'arrayBuffer' });
-    
-    if (!videoData) {
-      return new Response('Video not found', {
-        status: 404,
-        headers: corsHeaders
-      });
-    }
+    console.log('Attempting to stream video: einfuehrung-test.mp4');
 
-    // Konvertiere ArrayBuffer zu Uint8Array für Response
-    const videoBytes = new Uint8Array(videoData);
-    
-    // Video-Response Headers
-    const videoHeaders = {
-      ...corsHeaders,
-      'Content-Type': 'video/mp4',
-      'Content-Length': videoBytes.length.toString(),
-      'Accept-Ranges': 'bytes',
-      'Cache-Control': 'public, max-age=3600'
-    };
-
-    // Handle Range requests für Video-Streaming
-    const range = request.headers.get('range');
-    if (range) {
-      const parts = range.replace(/bytes=/, "").split("-");
-      const start = parseInt(parts[0], 10);
-      const end = parts[1] ? parseInt(parts[1], 10) : videoBytes.length - 1;
-      const chunksize = (end - start) + 1;
+    // Versuche verschiedene Datentypen
+    let videoData;
+    try {
+      // Versuche als Stream
+      videoData = await store.get('einfuehrung-test.mp4', { type: 'stream' });
+      console.log('Successfully got video as stream');
       
-      const chunk = videoBytes.slice(start, end + 1);
-      
-      return new Response(chunk, {
-        status: 206,
+      return new Response(videoData, {
+        status: 200,
         headers: {
-          ...videoHeaders,
-          'Content-Range': `bytes ${start}-${end}/${videoBytes.length}`,
-          'Content-Length': chunksize.toString()
+          ...corsHeaders,
+          'Content-Type': 'video/mp4',
+          'Cache-Control': 'public, max-age=3600'
         }
       });
+    } catch (streamError) {
+      console.log('Stream failed, trying blob:', streamError.message);
+      
+      try {
+        // Fallback zu Blob
+        videoData = await store.get('einfuehrung-test.mp4', { type: 'blob' });
+        console.log('Successfully got video as blob');
+        
+        return new Response(videoData, {
+          status: 200,
+          headers: {
+            ...corsHeaders,
+            'Content-Type': 'video/mp4',
+            'Cache-Control': 'public, max-age=3600'
+          }
+        });
+      } catch (blobError) {
+        console.log('Blob failed, trying arrayBuffer:', blobError.message);
+        
+        // Fallback zu ArrayBuffer
+        videoData = await store.get('einfuehrung-test.mp4', { type: 'arrayBuffer' });
+        console.log('Successfully got video as arrayBuffer, size:', videoData.byteLength);
+        
+        return new Response(videoData, {
+          status: 200,
+          headers: {
+            ...corsHeaders,
+            'Content-Type': 'video/mp4',
+            'Content-Length': videoData.byteLength.toString(),
+            'Cache-Control': 'public, max-age=3600'
+          }
+        });
+      }
     }
-
-    // Vollständige Video-Response
-    return new Response(videoBytes, {
-      status: 200,
-      headers: videoHeaders
-    });
 
   } catch (error) {
     console.error('Stream video error:', error);
