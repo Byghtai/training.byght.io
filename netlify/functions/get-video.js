@@ -57,12 +57,24 @@ export default async (request, context) => {
       console.log('Direct URL failed, trying data URL approach:', urlError.message);
       
       try {
-        // Lade das Video als ArrayBuffer
-        console.log('Loading video as ArrayBuffer for data URL...');
+        // Debug: Schaue dir die ersten Bytes des Videos an
+        console.log('Loading video as ArrayBuffer for inspection...');
         const videoData = await store.get('einfuehrung-test.mp4', { type: 'arrayBuffer' });
         console.log('Successfully loaded video, size:', videoData.byteLength, 'bytes');
         
-        // Konvertiere zu Base64 für Data-URL
+        // Inspiziere die ersten Bytes (MP4 Header)
+        const firstBytes = new Uint8Array(videoData.slice(0, 32));
+        const headerHex = Array.from(firstBytes).map(b => b.toString(16).padStart(2, '0')).join(' ');
+        console.log('First 32 bytes (hex):', headerHex);
+        
+        // Prüfe MP4 Magic Number
+        const mp4Magic1 = firstBytes[4] === 0x66 && firstBytes[5] === 0x74 && firstBytes[6] === 0x79 && firstBytes[7] === 0x70; // 'ftyp'
+        const mp4Magic2 = Array.from(firstBytes.slice(4, 8)).map(b => String.fromCharCode(b)).join('') === 'ftyp';
+        console.log('MP4 magic check 1:', mp4Magic1);
+        console.log('MP4 magic check 2:', mp4Magic2);
+        console.log('File type signature:', Array.from(firstBytes.slice(4, 12)).map(b => String.fromCharCode(b)).join(''));
+        
+        // Versuche trotzdem die Data-URL zu erstellen
         const base64Data = Buffer.from(videoData).toString('base64');
         videoUrl = `data:video/mp4;base64,${base64Data}`;
         console.log('Created data URL, length:', videoUrl.length);
