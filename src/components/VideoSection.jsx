@@ -18,9 +18,13 @@ const VideoSection = () => {
       
       if (data.success && data.videoUrl) {
         setVideoUrl(data.videoUrl);
+      } else {
+        console.warn('Video loading failed:', data.message || 'Unknown error');
+        setVideoUrl(null);
       }
     } catch (error) {
       console.error('Error loading video:', error);
+      setVideoUrl(null);
     } finally {
       setIsLoading(false);
     }

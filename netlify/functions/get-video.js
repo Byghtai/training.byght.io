@@ -36,19 +36,12 @@ export default async (request, context) => {
     );
     
     if (einfuhrungVideos.length === 0) {
-      // Fallback auf lokales Video, falls keines im Blob Storage gefunden wird
       return new Response(JSON.stringify({ 
-        success: true, 
-        videoUrl: '/assets/Einfuehrung-test.mp4',
-        fileName: 'Einfuehrung-test.mp4',
-        metadata: {
-          originalName: 'Einfuehrung-test.mp4',
-          contentType: 'video/mp4',
-          source: 'local-fallback'
-        },
-        message: 'Lokales Video verwendet (noch kein Upload in Blob Storage)'
+        success: false, 
+        error: 'No videos found in Blob Storage',
+        message: 'Keine Videos im Blob Storage gefunden. Bitte laden Sie zuerst ein Video hoch.'
       }), {
-        status: 200,
+        status: 404,
         headers: { ...corsHeaders, 'Content-Type': 'application/json' }
       });
     }
@@ -77,19 +70,13 @@ export default async (request, context) => {
   } catch (error) {
     console.error('Get video error:', error);
     
-    // Fallback auf lokales Video bei Fehlern
     return new Response(JSON.stringify({ 
-      success: true, 
-      videoUrl: '/assets/Einfuehrung-test.mp4',
-      fileName: 'Einfuehrung-test.mp4',
-      metadata: {
-        originalName: 'Einfuehrung-test.mp4',
-        contentType: 'video/mp4',
-        source: 'local-fallback'
-      },
-      message: 'Lokales Video verwendet (Blob Storage-Fehler)'
+      success: false, 
+      error: 'Failed to retrieve video from Blob Storage',
+      details: error.message,
+      message: 'Fehler beim Laden des Videos aus dem Blob Storage'
     }), {
-      status: 200,
+      status: 500,
       headers: { ...corsHeaders, 'Content-Type': 'application/json' }
     });
   }
