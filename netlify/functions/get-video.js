@@ -27,14 +27,19 @@ export default async (request, context) => {
       consistency: 'strong'
     });
 
-    // Prüfe ob das Video existiert
-    const videoExists = await store.get('einfuehrung-test.mp4');
+    // Liste alle verfügbaren Blobs auf
+    const { blobs } = await store.list();
+    console.log('Available blobs in videos store:', blobs.map(blob => blob.key));
     
-    if (!videoExists) {
+    // Suche nach dem spezifischen Video
+    const targetVideo = blobs.find(blob => blob.key === 'einfuehrung-test.mp4');
+    
+    if (!targetVideo) {
       return new Response(JSON.stringify({ 
         success: false, 
         error: 'Video not found in Blob Storage',
-        message: 'Das Video "einfuehrung-test.mp4" wurde nicht im Blob Storage gefunden.'
+        message: 'Das Video "einfuehrung-test.mp4" wurde nicht im Blob Storage gefunden.',
+        availableBlobs: blobs.map(blob => blob.key)
       }), {
         status: 404,
         headers: { ...corsHeaders, 'Content-Type': 'application/json' }

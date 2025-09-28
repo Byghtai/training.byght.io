@@ -34,7 +34,7 @@ const VideoSection = () => {
     return (
       <div className="flex items-center justify-center py-12">
         <Loader className="animate-spin text-byght-turquoise" size={32} />
-        <span className="ml-3 text-gray-600">Video wird geladen...</span>
+        <span className="ml-3 text-gray-600">Loading video...</span>
       </div>
     );
   }
@@ -49,17 +49,17 @@ const VideoSection = () => {
             poster="/api/placeholder/800/450"
           >
             <source src={videoUrl} type="video/mp4" />
-            Ihr Browser unterstützt das Video-Element nicht.
+            Your browser does not support the video element.
           </video>
         </div>
       ) : (
         <div className="bg-gray-50 border-2 border-dashed border-gray-300 rounded-lg p-8 text-center">
           <Play className="mx-auto text-gray-400 mb-4" size={48} />
           <h3 className="text-lg font-semibold text-gray-700 mb-2">
-            Kein Video verfügbar
+            No video available
           </h3>
           <p className="text-gray-600">
-            Das Einführungsvideo ist derzeit nicht verfügbar.
+            The introduction video is not currently available.
           </p>
         </div>
       )}
