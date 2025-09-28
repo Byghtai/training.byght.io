@@ -46,7 +46,7 @@ export default async (request, context) => {
       });
     }
 
-    // Alternative Ansätze für Video-URL
+    // Neuer Ansatz: Lade das Video direkt und erstelle eine Data-URL
     let videoUrl;
     
     try {
@@ -54,9 +54,25 @@ export default async (request, context) => {
       videoUrl = await store.get('einfuehrung-test.mp4', { type: 'url' });
       console.log('Direct URL approach worked:', videoUrl);
     } catch (urlError) {
-      console.log('Direct URL failed, using stream function:', urlError.message);
-      // Fallback zur Stream-Funktion
-      videoUrl = `${process.env.URL || 'https://training.byght.io'}/.netlify/functions/stream-video`;
+      console.log('Direct URL failed, trying data URL approach:', urlError.message);
+      
+      try {
+        // Lade das Video als ArrayBuffer
+        console.log('Loading video as ArrayBuffer for data URL...');
+        const videoData = await store.get('einfuehrung-test.mp4', { type: 'arrayBuffer' });
+        console.log('Successfully loaded video, size:', videoData.byteLength, 'bytes');
+        
+        // Konvertiere zu Base64 für Data-URL
+        const base64Data = Buffer.from(videoData).toString('base64');
+        videoUrl = `data:video/mp4;base64,${base64Data}`;
+        console.log('Created data URL, length:', videoUrl.length);
+        
+      } catch (dataUrlError) {
+        console.error('Data URL approach also failed:', dataUrlError);
+        // Fallback zur Stream-Funktion
+        videoUrl = '/.netlify/functions/stream-video';
+        console.log('Using stream URL as last resort:', videoUrl);
+      }
     }
 
     return new Response(JSON.stringify({ 
