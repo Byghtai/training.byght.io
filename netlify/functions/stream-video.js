@@ -36,13 +36,18 @@ export default async (request, context) => {
       videoData = await store.get('einfuehrung-test.mp4', { type: 'stream' });
       console.log('Successfully got video as stream');
       
+      // Bessere Headers für Video-Streaming
+      const headers = {
+        ...corsHeaders,
+        'Content-Type': 'video/mp4',
+        'Accept-Ranges': 'bytes',
+        'Cache-Control': 'public, max-age=3600',
+        'Cross-Origin-Resource-Policy': 'cross-origin'
+      };
+      
       return new Response(videoData, {
         status: 200,
-        headers: {
-          ...corsHeaders,
-          'Content-Type': 'video/mp4',
-          'Cache-Control': 'public, max-age=3600'
-        }
+        headers: headers
       });
     } catch (streamError) {
       console.log('Stream failed, trying blob:', streamError.message);

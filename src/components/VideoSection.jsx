@@ -13,10 +13,14 @@ const VideoSection = () => {
   const loadVideo = async () => {
     try {
       setIsLoading(true);
+      console.log('Fetching video URL...');
       const response = await fetch('/api/get-video');
       const data = await response.json();
       
+      console.log('Video API response:', data);
+      
       if (data.success && data.videoUrl) {
+        console.log('Setting video URL:', data.videoUrl);
         setVideoUrl(data.videoUrl);
       } else {
         console.warn('Video loading failed:', data.message || 'Unknown error');
@@ -47,10 +51,18 @@ const VideoSection = () => {
             controls
             className="w-full h-auto"
             poster="/api/placeholder/800/450"
+            onLoadStart={() => console.log('Video loading started')}
+            onCanPlay={() => console.log('Video can play')}
+            onError={(e) => console.error('Video error:', e)}
+            onLoadedData={() => console.log('Video data loaded')}
+            crossOrigin="anonymous"
           >
             <source src={videoUrl} type="video/mp4" />
             Your browser does not support the video element.
           </video>
+          <div className="absolute bottom-2 right-2 text-white text-xs bg-black bg-opacity-50 px-2 py-1 rounded">
+            URL: {videoUrl}
+          </div>
         </div>
       ) : (
         <div className="bg-gray-50 border-2 border-dashed border-gray-300 rounded-lg p-8 text-center">
