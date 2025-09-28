@@ -57,27 +57,67 @@ export default async (request, context) => {
       console.log('Direct URL failed, trying data URL approach:', urlError.message);
       
       try {
-        // Debug: Schaue dir die ersten Bytes des Videos an
-        console.log('Loading video as ArrayBuffer for inspection...');
-        const videoData = await store.get('einfuehrung-test.mp4', { type: 'arrayBuffer' });
-        console.log('Successfully loaded video, size:', videoData.byteLength, 'bytes');
+        // Versuche verschiedene Datentypen um das korrekte Video zu bekommen
+        console.log('Trying different data types to get valid video...');
         
-        // Inspiziere die ersten Bytes (MP4 Header)
+        let videoData;
+        let dataType;
+        
+        // Versuche zuerst 'blob' type
+        try {
+          console.log('Trying blob type...');
+          videoData = await store.get('einfuehrung-test.mp4', { type: 'blob' });
+          dataType = 'blob';
+          console.log('Blob type successful, size:', videoData.size);
+          
+          // Konvertiere Blob zu ArrayBuffer für Response
+          videoData = await videoData.arrayBuffer();
+          console.log('Converted to ArrayBuffer, size:', videoData.byteLength);
+          
+        } catch (blobError) {
+          console.log('Blob type failed:', blobError.message);
+          
+          try {
+            console.log('Trying arrayBuffer type...');
+            videoData = await store.get('einfuehrung-test.mp4', { type: 'arrayBuffer' });
+            dataType = 'arrayBuffer';
+            console.log('ArrayBuffer type successful, size:', videoData.byteLength);
+            
+          } catch (arrayBufferError) {
+            console.log('ArrayBuffer type failed:', arrayBufferError.message);
+            
+            // Last resort: try stream and convert
+            console.log('Trying stream type as last resort...');
+            const stream = await store.get('einfuehrung-test.mp4', { type: 'stream' });
+            const chunks = [];
+            const reader = stream.getReader();
+            
+            while (true) {
+              const { done, value } = await reader.read();
+              if (done) break;
+              chunks.push(value);
+            }
+            
+            videoData = new Uint8Array(chunks.reduce((acc, chunk) => acc + chunk.length, 0));
+            let offset = 0;
+            for (const chunk of chunks) {
+              videoData.set(chunk, offset);
+              offset += chunk.length;
+            }
+            
+            videoData = videoData.buffer;
+            dataType = 'stream-converted';
+            console.log('Stream conversion successful, size:', videoData.byteLength);
+          }
+        }
+        
+        // Inspiziere die ersten Bytes
         const firstBytes = new Uint8Array(videoData.slice(0, 32));
         const headerHex = Array.from(firstBytes).map(b => b.toString(16).padStart(2, '0')).join(' ');
         console.log('First 32 bytes (hex):', headerHex);
+        console.log('Data type used:', dataType);
         
-        // Prüfe MP4 Magic Number
-        const mp4Magic1 = firstBytes[4] === 0x66 && firstBytes[5] === 0x74 && firstBytes[6] === 0x79 && firstBytes[7] === 0x70; // 'ftyp'
-        const mp4Magic2 = Array.from(firstBytes.slice(4, 8)).map(b => String.fromCharCode(b)).join('') === 'ftyp';
-        console.log('MP4 magic check 1:', mp4Magic1);
-        console.log('MP4 magic check 2:', mp4Magic2);
-        console.log('File type signature:', Array.from(firstBytes.slice(4, 12)).map(b => String.fromCharCode(b)).join(''));
-        
-        // Data-URLs sind zu groß für große Videos - verwende direkten Blob-Response
-        console.log('Video is valid MP4, but too large for data URL. Serving directly...');
-        
-        // Gib das Video direkt als Response zurück anstatt als JSON
+        // Gib das Video direkt als Response zurück
         return new Response(videoData, {
           status: 200,
           headers: {
