@@ -74,10 +74,21 @@ export default async (request, context) => {
         console.log('MP4 magic check 2:', mp4Magic2);
         console.log('File type signature:', Array.from(firstBytes.slice(4, 12)).map(b => String.fromCharCode(b)).join(''));
         
-        // Versuche trotzdem die Data-URL zu erstellen
-        const base64Data = Buffer.from(videoData).toString('base64');
-        videoUrl = `data:video/mp4;base64,${base64Data}`;
-        console.log('Created data URL, length:', videoUrl.length);
+        // Data-URLs sind zu groß für große Videos - verwende direkten Blob-Response
+        console.log('Video is valid MP4, but too large for data URL. Serving directly...');
+        
+        // Gib das Video direkt als Response zurück anstatt als JSON
+        return new Response(videoData, {
+          status: 200,
+          headers: {
+            ...corsHeaders,
+            'Content-Type': 'video/mp4',
+            'Content-Length': videoData.byteLength.toString(),
+            'Accept-Ranges': 'bytes',
+            'Cache-Control': 'public, max-age=3600',
+            'Content-Disposition': 'inline; filename="einfuehrung-test.mp4"'
+          }
+        });
         
       } catch (dataUrlError) {
         console.error('Data URL approach also failed:', dataUrlError);

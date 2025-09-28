@@ -8,25 +8,57 @@ const VideoSection = () => {
   // Load video on component mount
   useEffect(() => {
     loadVideo();
+    
+    // Cleanup blob URL when component unmounts
+    return () => {
+      if (videoUrl && videoUrl.startsWith('blob:')) {
+        URL.revokeObjectURL(videoUrl);
+      }
+    };
   }, []);
+  
+  // Cleanup old blob URL when new one is set
+  useEffect(() => {
+    return () => {
+      if (videoUrl && videoUrl.startsWith('blob:')) {
+        URL.revokeObjectURL(videoUrl);
+      }
+    };
+  }, [videoUrl]);
 
   const loadVideo = async () => {
     try {
       setIsLoading(true);
-      console.log('Fetching video URL...');
+      console.log('Fetching video...');
       const response = await fetch('/api/get-video');
-      const data = await response.json();
       
-      console.log('Video API response:', data);
+      console.log('Response status:', response.status);
+      console.log('Response headers:', Object.fromEntries(response.headers.entries()));
       
-      if (data.success && data.videoUrl) {
-        console.log('Setting video URL type:', typeof data.videoUrl);
-        console.log('Video URL length:', data.videoUrl.length);
-        console.log('Video URL starts with:', data.videoUrl.substring(0, 100));
-        setVideoUrl(data.videoUrl);
+      // Prüfe ob es ein JSON-Response ist (Fehlerfall) oder direktes Video
+      const contentType = response.headers.get('content-type');
+      
+      if (contentType && contentType.includes('application/json')) {
+        // JSON Response - wahrscheinlich ein Fehler
+        const data = await response.json();
+        console.log('JSON response (error case):', data);
+        
+        if (data.success && data.videoUrl) {
+          console.log('Using video URL from JSON:', data.videoUrl);
+          setVideoUrl(data.videoUrl);
+        } else {
+          console.warn('Video loading failed:', data.message || 'Unknown error');
+          setVideoUrl(null);
+        }
+      } else if (contentType && contentType.includes('video/mp4')) {
+        // Direkter Video-Response
+        console.log('Received direct video response');
+        const blob = await response.blob();
+        const videoUrl = URL.createObjectURL(blob);
+        console.log('Created blob URL:', videoUrl);
+        setVideoUrl(videoUrl);
       } else {
-        console.warn('Video loading failed:', data.message || 'Unknown error');
-        console.warn('Full response:', data);
+        console.error('Unexpected content type:', contentType);
         setVideoUrl(null);
       }
     } catch (error) {
