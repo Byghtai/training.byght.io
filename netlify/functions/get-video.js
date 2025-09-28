@@ -21,46 +21,31 @@ export default async (request, context) => {
   }
 
   try {
-    // Erstelle Netlify Blob Store für Training-Videos
+    // Erstelle Netlify Blob Store für Videos
     const store = getStore({
-      name: 'training-videos',
+      name: 'videos',
       consistency: 'strong'
     });
 
-    // Liste alle Videos im Store auf
-    const { blobs } = await store.list();
+    // Lade das spezifische Video "einfuehrung-test.mp4"
+    const videoData = await store.getWithMetadata('einfuehrung-test.mp4', { type: 'url' });
     
-    // Finde das neueste Einführung-Video
-    const einfuhrungVideos = blobs.filter(blob => 
-      blob.key && blob.key.includes('einfuehrung-test') && blob.key.endsWith('.mp4')
-    );
-    
-    if (einfuhrungVideos.length === 0) {
+    if (!videoData) {
       return new Response(JSON.stringify({ 
         success: false, 
-        error: 'No videos found in Blob Storage',
-        message: 'Keine Videos im Blob Storage gefunden. Bitte laden Sie zuerst ein Video hoch.'
+        error: 'Video not found in Blob Storage',
+        message: 'Das Video "einfuehrung-test.mp4" wurde nicht im Blob Storage gefunden.'
       }), {
         status: 404,
         headers: { ...corsHeaders, 'Content-Type': 'application/json' }
       });
     }
 
-    // Sortiere nach Upload-Datum (neuestes zuerst)
-    einfuhrungVideos.sort((a, b) => 
-      new Date(b.metadata?.uploadedAt || 0) - new Date(a.metadata?.uploadedAt || 0)
-    );
-
-    const latestVideo = einfuhrungVideos[0];
-    
-    // Hole das Video mit URL aus dem Blob Store
-    const videoData = await store.getWithMetadata(latestVideo.key, { type: 'url' });
-
     return new Response(JSON.stringify({ 
       success: true, 
       videoUrl: videoData.url,
-      fileName: latestVideo.key,
-      metadata: latestVideo.metadata,
+      fileName: 'einfuehrung-test.mp4',
+      metadata: videoData.metadata,
       message: 'Video aus Netlify Blob Storage geladen'
     }), {
       status: 200,
