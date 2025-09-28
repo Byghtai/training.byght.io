@@ -1,11 +1,13 @@
 import { getStore } from '@netlify/blobs';
+import fs from 'fs';
+import path from 'path';
 
 export default async (request, context) => {
   // CORS Headers
   const corsHeaders = {
     'Access-Control-Allow-Origin': '*',
     'Access-Control-Allow-Headers': 'Content-Type',
-    'Access-Control-Allow-Methods': 'GET, OPTIONS',
+    'Access-Control-Allow-Methods': 'POST, OPTIONS',
   };
 
   // Handle preflight requests
@@ -13,7 +15,7 @@ export default async (request, context) => {
     return new Response(null, { status: 200, headers: corsHeaders });
   }
 
-  if (request.method !== 'GET') {
+  if (request.method !== 'POST') {
     return new Response(JSON.stringify({ error: 'Method not allowed' }), {
       status: 405,
       headers: { ...corsHeaders, 'Content-Type': 'application/json' }
@@ -27,46 +29,52 @@ export default async (request, context) => {
       consistency: 'strong'
     });
 
-    // Liste alle Videos im Store auf
-    const { blobs } = await store.list();
+    // Lade das lokale Video
+    const videoPath = path.join(process.cwd(), 'public', 'assets', 'Einfuehrung-test.mp4');
     
-    // Finde das neueste Einführung-Video
-    const einfuhrungVideos = blobs.filter(blob => 
-      blob.key && blob.key.includes('einfuehrung-test') && blob.key.endsWith('.mp4')
-    );
-    
-    if (einfuehrungVideos.length === 0) {
+    if (!fs.existsSync(videoPath)) {
       return new Response(JSON.stringify({ 
-        success: false, 
-        message: 'Kein Einführungsvideo in Netlify Blob Storage gefunden' 
+        error: 'Lokales Video nicht gefunden',
+        path: videoPath
       }), {
         status: 404,
         headers: { ...corsHeaders, 'Content-Type': 'application/json' }
       });
     }
 
-    // Sortiere nach Upload-Datum (neuestes zuerst)
-    einfuhrungVideos.sort((a, b) => 
-      new Date(b.metadata?.uploadedAt || 0) - new Date(a.metadata?.uploadedAt || 0)
-    );
+    // Lese das Video als Buffer
+    const videoBuffer = fs.readFileSync(videoPath);
+    const fileName = `einfuehrung-test-${Date.now()}.mp4`;
 
-    const latestVideo = einfuhrungVideos[0];
-    const videoUrl = await store.getUrl(latestVideo.key);
+    // Speichere das Video im Netlify Blob Store
+    await store.set(fileName, videoBuffer, {
+      metadata: {
+        originalName: 'Einfuehrung-test.mp4',
+        contentType: 'video/mp4',
+        size: videoBuffer.length,
+        uploadedAt: new Date().toISOString(),
+        source: 'local-file'
+      }
+    });
+
+    // Erstelle eine öffentliche URL für das Video
+    const videoUrl = await store.getUrl(fileName);
 
     return new Response(JSON.stringify({ 
       success: true, 
+      fileName,
       videoUrl,
-      fileName: latestVideo.key,
-      metadata: latestVideo.metadata
+      message: 'Lokales Video erfolgreich in Netlify Blob Storage geladen',
+      size: videoBuffer.length
     }), {
       status: 200,
       headers: { ...corsHeaders, 'Content-Type': 'application/json' }
     });
 
   } catch (error) {
-    console.error('Get video error:', error);
+    console.error('Load local video error:', error);
     return new Response(JSON.stringify({ 
-      error: 'Failed to get video', 
+      error: 'Failed to load local video', 
       details: error.message 
     }), {
       status: 500,

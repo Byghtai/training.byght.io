@@ -28,6 +28,31 @@ const VideoSection = () => {
     }
   };
 
+  const loadLocalVideo = async () => {
+    try {
+      setIsLoading(true);
+      setUploadStatus({ type: 'info', message: 'Lade lokales Video in Netlify Blob Storage...' });
+      
+      const response = await fetch('/api/load-local-video', {
+        method: 'POST',
+      });
+      const data = await response.json();
+      
+      if (data.success) {
+        setVideoUrl(data.videoUrl);
+        setUploadStatus({ type: 'success', message: 'Lokales Video erfolgreich in Blob Storage geladen!' });
+        setTimeout(() => setUploadStatus(null), 3000);
+      } else {
+        setUploadStatus({ type: 'error', message: data.error || 'Fehler beim Laden des lokalen Videos' });
+      }
+    } catch (error) {
+      console.error('Fehler beim Laden des lokalen Videos:', error);
+      setUploadStatus({ type: 'error', message: 'Fehler beim Laden des lokalen Videos' });
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
   const handleFileUpload = async (event) => {
     const file = event.target.files[0];
     if (!file) return;
@@ -161,27 +186,41 @@ const VideoSection = () => {
         <div className="flex items-center justify-between">
           <div>
             <h4 className="font-semibold text-gray-800 mb-1">
-              Video aktualisieren
+              Video verwalten
             </h4>
             <p className="text-sm text-gray-600">
-              Laden Sie eine neue Version des Einführungsvideos hoch.
+              Laden Sie eine neue Version hoch oder verwenden Sie das lokale Video.
             </p>
           </div>
-          <label className="inline-flex items-center px-4 py-2 bg-gray-100 text-gray-700 rounded-lg hover:bg-gray-200 transition-colors cursor-pointer">
-            {isUploading ? (
-              <Loader className="animate-spin mr-2" size={16} />
-            ) : (
-              <Upload className="mr-2" size={16} />
-            )}
-            {isUploading ? 'Wird hochgeladen...' : 'Neues Video'}
-            <input
-              type="file"
-              accept="video/*"
-              onChange={handleFileUpload}
-              className="hidden"
-              disabled={isUploading}
-            />
-          </label>
+          <div className="flex gap-3">
+            <button
+              onClick={loadLocalVideo}
+              disabled={isLoading}
+              className="inline-flex items-center px-4 py-2 bg-blue-100 text-blue-700 rounded-lg hover:bg-blue-200 transition-colors disabled:opacity-50"
+            >
+              {isLoading ? (
+                <Loader className="animate-spin mr-2" size={16} />
+              ) : (
+                <Upload className="mr-2" size={16} />
+              )}
+              {isLoading ? 'Wird geladen...' : 'Lokales Video laden'}
+            </button>
+            <label className="inline-flex items-center px-4 py-2 bg-gray-100 text-gray-700 rounded-lg hover:bg-gray-200 transition-colors cursor-pointer">
+              {isUploading ? (
+                <Loader className="animate-spin mr-2" size={16} />
+              ) : (
+                <Upload className="mr-2" size={16} />
+              )}
+              {isUploading ? 'Wird hochgeladen...' : 'Neues Video'}
+              <input
+                type="file"
+                accept="video/*"
+                onChange={handleFileUpload}
+                className="hidden"
+                disabled={isUploading}
+              />
+            </label>
+          </div>
         </div>
       </div>
     </div>

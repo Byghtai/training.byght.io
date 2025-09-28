@@ -21,7 +21,6 @@ export default async (request, context) => {
   }
 
   try {
-    const store = getStore('training-videos');
     const formData = await request.formData();
     const file = formData.get('video');
     
@@ -32,15 +31,21 @@ export default async (request, context) => {
       });
     }
 
-    // Konvertiere File zu ArrayBuffer
-    const arrayBuffer = await file.arrayBuffer();
-    const buffer = new Uint8Array(arrayBuffer);
+    // Erstelle einen Blob Store für Videos
+    const store = getStore({
+      name: 'training-videos',
+      consistency: 'strong'
+    });
 
     // Generiere einen eindeutigen Dateinamen
     const timestamp = Date.now();
     const fileName = `einfuehrung-test-${timestamp}.mp4`;
 
-    // Speichere das Video im Blob Store
+    // Konvertiere File zu ArrayBuffer für Blob Storage
+    const arrayBuffer = await file.arrayBuffer();
+    const buffer = new Uint8Array(arrayBuffer);
+
+    // Speichere das Video im Netlify Blob Store
     await store.set(fileName, buffer, {
       metadata: {
         originalName: file.name,
@@ -51,13 +56,13 @@ export default async (request, context) => {
     });
 
     // Erstelle eine öffentliche URL für das Video
-    const videoUrl = `https://api.netlify.com/v1/sites/${context.site.id}/blobs/${fileName}`;
+    const videoUrl = await store.getUrl(fileName);
 
     return new Response(JSON.stringify({ 
       success: true, 
       fileName,
       videoUrl,
-      message: 'Video erfolgreich hochgeladen'
+      message: 'Video erfolgreich in Netlify Blob Storage hochgeladen'
     }), {
       status: 200,
       headers: { ...corsHeaders, 'Content-Type': 'application/json' }
