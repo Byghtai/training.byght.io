@@ -20,9 +20,9 @@ const Login = () => {
     const result = await login(password);
     
     if (result.success) {
-      navigate('/dashboard');
+      navigate('/training');
     } else {
-      setError(result.error || 'Login fehlgeschlagen');
+      setError(result.error || 'Login failed');
     }
     
     setLoading(false);
@@ -36,7 +36,7 @@ const Login = () => {
           <div className="inline-flex items-center justify-center w-32 h-32 bg-white rounded-2xl shadow-sm mb-4 p-3">
             <img src={ByghtLogo} alt="Byght Logo" className="w-full h-full object-contain" />
           </div>
-          <h1 className="text-2xl font-semibold text-byght-gray mb-1">Byght Portal</h1>
+          <h1 className="text-2xl font-semibold text-byght-gray mb-1">Byght Training</h1>
         </div>
 
         {/* Login Form */}
@@ -56,7 +56,7 @@ const Login = () => {
           <form onSubmit={handleSubmit} className="space-y-4">
             <div>
               <label htmlFor="password" className="block text-sm font-medium text-byght-gray mb-1.5">
-                Training Passwort
+                Password
               </label>
               <div className="relative">
                 <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
@@ -68,7 +68,7 @@ const Login = () => {
                   value={password}
                   onChange={(e) => setPassword(e.target.value)}
                   className="input-field pl-10 pr-10"
-                  placeholder="Ihr Training-Passwort"
+                  placeholder="Your password"
                   required
                 />
                 <button
@@ -89,10 +89,10 @@ const Login = () => {
               {loading ? (
                 <div className="flex items-center justify-center gap-2">
                   <div className="animate-spin rounded-full h-4 w-4 border-b-2 border-white"></div>
-                  <span>Anmelden...</span>
+                  <span>Signing in...</span>
                 </div>
               ) : (
-                'Anmelden'
+                'Sign In'
               )}
             </button>
           </form>

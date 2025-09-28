@@ -1,10 +1,11 @@
 import React, { useState } from 'react';
 import { useAuth } from '../contexts/AuthContext';
 import { useNavigate } from 'react-router-dom';
-import { LogOut, User, Menu, X, Cloud, Key, CheckCircle, Upload, Users, FileCheck, HelpCircle, Mail, ChevronRight, ChevronDown, Settings, Download, Folder } from 'lucide-react';
+import { LogOut, Menu, X, Cloud, Key, CheckCircle, Upload, Users, FileCheck, HelpCircle, Mail, ChevronRight, ChevronDown, Settings, Download, Folder } from 'lucide-react';
 import ByghtLogo from '../assets/byght-logo.svg';
+import VideoSection from './VideoSection';
 
-const Dashboard = () => {
+const Training = () => {
   const { user, logout } = useAuth();
   const navigate = useNavigate();
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
@@ -32,16 +33,12 @@ const Dashboard = () => {
             <div className="flex items-center space-x-3">
               <img src={ByghtLogo} alt="Byght Logo" className="h-10 w-auto" />
               <div className="hidden sm:block">
-                <h1 className="text-xl font-semibold text-byght-gray">Portal</h1>
+                <h1 className="text-xl font-semibold text-byght-gray">Training</h1>
               </div>
             </div>
             
             {/* Desktop Navigation */}
             <div className="hidden sm:flex items-center space-x-4">
-              <div className="flex items-center gap-2 text-byght-gray">
-                <User size={18} />
-                <span className="font-medium">{user?.username}</span>
-              </div>
               <button
                 onClick={handleLogout}
                 className="flex items-center gap-2 text-byght-gray hover:text-red-500 transition-colors"
@@ -66,10 +63,6 @@ const Dashboard = () => {
           {mobileMenuOpen && (
             <div className="sm:hidden pb-4 border-t border-gray-200">
               <div className="flex flex-col space-y-3 pt-4">
-                <div className="flex items-center gap-2 text-byght-gray py-2">
-                  <User size={18} />
-                  <span className="font-medium">{user?.username}</span>
-                </div>
                 <button
                   onClick={() => {
                     handleLogout();
@@ -124,6 +117,9 @@ const Dashboard = () => {
 
           {/* Separator */}
           <div className="border-t border-gray-200 mb-8"></div>
+
+          {/* Video Section */}
+          <VideoSection />
 
           {/* Step-by-step guide */}
           <div className="mb-8">
@@ -427,4 +423,4 @@ const Dashboard = () => {
   );
 };
 
-export default Dashboard;
+export default Training;

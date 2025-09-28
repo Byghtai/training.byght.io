@@ -1,6 +1,6 @@
 import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-dom';
 import Login from './components/Login';
-import Dashboard from './components/Dashboard';
+import Training from './components/Dashboard';
 import ProtectedRoute from './components/ProtectedRoute';
 import { AuthProvider } from './contexts/AuthContext';
 
@@ -12,14 +12,14 @@ function App() {
           <Routes>
             <Route path="/login" element={<Login />} />
             <Route
-              path="/dashboard"
+              path="/training"
               element={
                 <ProtectedRoute>
-                  <Dashboard />
+                  <Training />
                 </ProtectedRoute>
               }
             />
-            <Route path="/" element={<Navigate to="/dashboard" replace />} />
+            <Route path="/" element={<Navigate to="/training" replace />} />
           </Routes>
         </div>
       </Router>
