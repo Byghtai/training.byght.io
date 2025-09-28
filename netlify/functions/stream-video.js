@@ -29,58 +29,44 @@ export default async (request, context) => {
 
     console.log('Attempting to stream video: einfuehrung-test.mp4');
 
-    // Versuche verschiedene Datentypen
-    let videoData;
+    // Direkter Ansatz: ArrayBuffer mit korrekten Headers
     try {
-      // Versuche als Stream
-      videoData = await store.get('einfuehrung-test.mp4', { type: 'stream' });
-      console.log('Successfully got video as stream');
+      console.log('Loading video as arrayBuffer...');
+      const videoData = await store.get('einfuehrung-test.mp4', { type: 'arrayBuffer' });
+      console.log('Successfully loaded video, size:', videoData.byteLength, 'bytes');
       
-      // Bessere Headers für Video-Streaming
-      const headers = {
-        ...corsHeaders,
-        'Content-Type': 'video/mp4',
-        'Accept-Ranges': 'bytes',
-        'Cache-Control': 'public, max-age=3600',
-        'Cross-Origin-Resource-Policy': 'cross-origin'
-      };
-      
-      return new Response(videoData, {
+      // Erstelle Response mit korrekten Headers
+      const response = new Response(videoData, {
         status: 200,
-        headers: headers
+        headers: {
+          ...corsHeaders,
+          'Content-Type': 'video/mp4',
+          'Content-Length': videoData.byteLength.toString(),
+          'Accept-Ranges': 'bytes',
+          'Cache-Control': 'public, max-age=3600',
+          'Access-Control-Expose-Headers': 'Content-Length, Accept-Ranges'
+        }
       });
-    } catch (streamError) {
-      console.log('Stream failed, trying blob:', streamError.message);
       
+      console.log('Returning video response with headers:', Object.fromEntries(response.headers.entries()));
+      return response;
+      
+    } catch (arrayBufferError) {
+      console.error('ArrayBuffer approach failed:', arrayBufferError);
+      
+      // Fallback: Versuche Text um zu sehen was passiert
       try {
-        // Fallback zu Blob
-        videoData = await store.get('einfuehrung-test.mp4', { type: 'blob' });
-        console.log('Successfully got video as blob');
+        console.log('Trying text type as debug...');
+        const debugData = await store.get('einfuehrung-test.mp4', { type: 'text' });
+        console.log('Text response (first 100 chars):', debugData.substring(0, 100));
         
-        return new Response(videoData, {
-          status: 200,
-          headers: {
-            ...corsHeaders,
-            'Content-Type': 'video/mp4',
-            'Cache-Control': 'public, max-age=3600'
-          }
+        return new Response('Video loading failed - check logs for details', {
+          status: 500,
+          headers: corsHeaders
         });
-      } catch (blobError) {
-        console.log('Blob failed, trying arrayBuffer:', blobError.message);
-        
-        // Fallback zu ArrayBuffer
-        videoData = await store.get('einfuehrung-test.mp4', { type: 'arrayBuffer' });
-        console.log('Successfully got video as arrayBuffer, size:', videoData.byteLength);
-        
-        return new Response(videoData, {
-          status: 200,
-          headers: {
-            ...corsHeaders,
-            'Content-Type': 'video/mp4',
-            'Content-Length': videoData.byteLength.toString(),
-            'Cache-Control': 'public, max-age=3600'
-          }
-        });
+      } catch (textError) {
+        console.error('Even text approach failed:', textError);
+        throw arrayBufferError;
       }
     }
 
