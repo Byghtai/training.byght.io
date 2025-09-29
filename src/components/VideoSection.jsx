@@ -19,19 +19,6 @@ const VideoSection = () => {
             className="absolute top-0 left-0 w-full h-full"
           />
         </div>
-        <div className="absolute bottom-2 right-2 text-white text-xs bg-black bg-opacity-50 px-2 py-1 rounded">
-          YouTube Video
-        </div>
-        <div className="absolute bottom-2 left-2 text-white text-xs bg-black bg-opacity-50 px-2 py-1 rounded">
-          <a 
-            href={`https://www.youtube.com/watch?v=${youtubeVideoId}`}
-            target="_blank"
-            rel="noopener noreferrer"
-            className="text-blue-300 hover:text-blue-100"
-          >
-            Auf YouTube ansehen
-          </a>
-        </div>
       </div>
     </div>
   );
