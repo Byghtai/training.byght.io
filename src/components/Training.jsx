@@ -617,8 +617,26 @@ const Training = () => {
             </h2>
             <VideoSection videoId="UwfbpFQUibw" title="ISMS SmartKit Training - Teil VIII: Wie geht es weiter?" />
             
+            {/* Calendly Link Platzhalter */}
+            <div className="mt-8 bg-gradient-to-r from-red-50 to-red-100 border-l-4 border-red-500 p-4 rounded-r-lg">
+              <h4 className="font-semibold text-gray-800 mb-3 flex items-center gap-2">
+                <div className="w-5 h-5 bg-red-500 rounded-full flex items-center justify-center">
+                  <span className="text-white text-xs font-bold">!</span>
+                </div>
+                Terminbuchung
+              </h4>
+              <p className="text-sm text-gray-700 mb-3">
+                Du bist etwa mit den ersten 10 Aufgaben durch? Dann bucht das kostenfreie ISMS Coaching mit Byght.
+              </p>
+              <div className="bg-red-200 border-2 border-dashed border-red-400 p-4 rounded-lg text-center">
+                <p className="text-red-700 font-medium text-sm">
+                  LINK ZU CALENDY HINZUFÜGEN
+                </p>
+              </div>
+            </div>
+
             {/* Wissensbereich Link */}
-            <div className="mt-8 bg-gradient-to-r from-byght-turquoise/5 to-blue-50 border-l-4 border-byght-turquoise p-4 rounded-r-lg">
+            <div className="mt-6 bg-gradient-to-r from-byght-turquoise/5 to-blue-50 border-l-4 border-byght-turquoise p-4 rounded-r-lg">
               <h4 className="font-semibold text-gray-800 mb-3 flex items-center gap-2">
                 <CheckCircle className="text-byght-turquoise" size={20} />
                 Weitere Lerninhalte
