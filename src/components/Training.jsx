@@ -180,7 +180,7 @@ const Training = () => {
               <Upload className="text-byght-turquoise" size={28} />
               Teil I: ISO 27001
             </h2>
-            <VideoSection />
+            <VideoSection videoId="NmJzswjKuWY" title="ISMS SmartKit Training - Teil I: ISO 27001" />
             
             {/* Lessons Learned */}
             <div className="mt-8 bg-gradient-to-r from-green-50 to-emerald-50 border-l-4 border-green-500 p-6 rounded-r-lg">
@@ -615,7 +615,7 @@ const Training = () => {
               <HelpCircle className="text-byght-turquoise" size={28} />
               Teil VIII: Wie geht es weiter?
             </h2>
-            <VideoSection />
+            <VideoSection videoId="UwfbpFQUibw" title="ISMS SmartKit Training - Teil VIII: Wie geht es weiter?" />
             
             {/* Wissensbereich Link */}
             <div className="mt-8 bg-gradient-to-r from-byght-turquoise/5 to-blue-50 border-l-4 border-byght-turquoise p-4 rounded-r-lg">
