@@ -1,9 +1,9 @@
 import React from 'react';
 import { Play } from 'lucide-react';
 
-const VideoSection = () => {
+const VideoSection = ({ videoId = 'pLHLB3d1sm0', title = 'ISMS SmartKit Training Introduction' }) => {
   // YouTube Video ID aus der URL extrahieren
-  const youtubeVideoId = 'pLHLB3d1sm0';
+  const youtubeVideoId = videoId;
   const youtubeEmbedUrl = `https://www.youtube.com/embed/${youtubeVideoId}`;
 
   return (
@@ -12,7 +12,7 @@ const VideoSection = () => {
         <div className="relative w-full" style={{ paddingBottom: '56.25%' }}>
           <iframe
             src={youtubeEmbedUrl}
-            title="ISMS SmartKit Training Introduction"
+            title={title}
             frameBorder="0"
             allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
             allowFullScreen

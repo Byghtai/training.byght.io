@@ -1052,20 +1052,28 @@ export async function removeDescriptionColumn() {
 export async function validateTrainingPassword(password) {
   const client = await pool.connect();
   try {
-    // Alle gültigen Passwörter abrufen (nicht abgelaufen)
+    // Alle Passwörter abrufen (auch abgelaufene)
     const result = await client.query(
-      'SELECT id, password_hash, expiry_date FROM training_passwords WHERE expiry_date >= CURRENT_DATE ORDER BY created_at DESC'
+      'SELECT id, password_hash, expiry_date FROM training_passwords ORDER BY created_at DESC'
     );
     
     if (result.rows.length === 0) {
-      return { valid: false, error: 'Keine gültigen Passwörter verfügbar' };
+      return { valid: false, error: 'No passwords available' };
     }
     
-    // Passwort gegen alle gültigen Passwörter prüfen
+    // Passwort gegen alle Passwörter prüfen
     const bcrypt = await import('bcryptjs');
     for (const row of result.rows) {
       const isValid = await bcrypt.default.compare(password, row.password_hash);
       if (isValid) {
+        // Passwort gefunden - prüfen ob abgelaufen
+        const currentDate = new Date();
+        const expiryDate = new Date(row.expiry_date);
+        
+        if (expiryDate < currentDate) {
+          return { valid: false, error: 'Password expired' };
+        }
+        
         return { 
           valid: true, 
           passwordId: row.id,
@@ -1074,7 +1082,7 @@ export async function validateTrainingPassword(password) {
       }
     }
     
-    return { valid: false, error: 'Ungültiges Passwort' };
+    return { valid: false, error: 'Invalid password' };
   } catch (error) {
     console.error('Database error in validateTrainingPassword:', error);
     throw error;
