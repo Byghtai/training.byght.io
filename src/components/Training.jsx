@@ -1,7 +1,7 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { useAuth } from '../contexts/AuthContext';
 import { useNavigate } from 'react-router-dom';
-import { LogOut, Menu, X, Cloud, Key, CheckCircle, Upload, Users, FileCheck, HelpCircle, Mail, ChevronRight, ChevronDown, Settings, Download, Folder } from 'lucide-react';
+import { LogOut, Menu, X, Cloud, Key, CheckCircle, Upload, Users, FileCheck, HelpCircle, Mail, ChevronRight, ChevronDown, Settings, Download, Folder, PlayCircle, Video, BookOpen, Play, Rocket } from 'lucide-react';
 import ByghtLogo from '../assets/byght-logo.svg';
 import VideoSection from './VideoSection';
 
@@ -16,20 +16,31 @@ const Training = () => {
   // Navigation states
   const [activeSection, setActiveSection] = useState('');
   
+  // Refs for quote section
+  const quoteRef = useRef(null);
+  
   // Refs for sections
   const sectionRefs = useRef({});
   
+  // Full quote text for typewriter animation (split into words)
+  const fullQuote = `„Man darf nie an die ganze Straße auf einmal denken, verstehst du? Man muss nur an den nächsten Schritt denken, an den nächsten Atemzug, an den nächsten Besenstrich. Und immer wieder nur an den nächsten." Wieder hielt er inne und überlegte, ehe er hinzufügte: „Dann macht es Freude; das ist wichtig, dann macht man seine Sache gut. Und so soll es sein."
+
+Und abermals nach einer langen Pause fuhr er fort: „Auf einmal merkt man, dass man Schritt für Schritt die ganze Straße gemacht hat. Man hat gar nicht gemerkt wie, und man ist nicht außer Puste."
+
+Er nickte vor sich hin und sagte abschließend: „Das ist wichtig."`;
+  
+  const words = fullQuote.split(/(\s+)/);
+  
   // Define navigation items
   const navigationItems = [
-    { id: 'einleitung', title: 'Einleitung', icon: Users },
-    { id: 'teil1', title: 'Teil I: ISO 27001', icon: Upload },
-    { id: 'teil2', title: 'Teil II: Customizing & Berechtigungen', icon: Settings },
-    { id: 'teil3', title: 'Teil III: Aufgabenbericht', icon: FileCheck },
-    { id: 'teil4', title: 'Teil IV: Die ersten 10 Aufgaben', icon: CheckCircle },
-    { id: 'teil5', title: 'Teil V: Richtlinien und Dokumentenlenkung', icon: Folder },
-    { id: 'teil6', title: 'Teil VI: ISO 27001 Self Assessment & Anwendbarkeitserklärung', icon: Cloud },
-    { id: 'teil7', title: 'Teil VII: Fortlaufende Verbesserung und Maßnahmen', icon: Key },
-    { id: 'teil8', title: 'Teil VIII: Wie geht es weiter?', icon: HelpCircle },
+    { id: 'einleitung', title: 'Einleitung', icon: Rocket },
+    { id: 'teil1', title: 'Teil I: ISO 27001', icon: PlayCircle },
+    { id: 'teil2', title: 'Teil II: Customizing & Berechtigungen', icon: PlayCircle },
+    { id: 'teil3', title: 'Teil III: Aufgabenbericht', icon: PlayCircle },
+    { id: 'teil4', title: 'Teil IV: Die ersten 10 Aufgaben', icon: PlayCircle },
+    { id: 'teil5', title: 'Teil V: Richtlinien und Dokumentenlenkung', icon: PlayCircle },
+    { id: 'teil6', title: 'Teil VI: ISO 27001 Self Assessment & Anwendbarkeitserklärung', icon: PlayCircle },
+    { id: 'teil7', title: 'Teil VII: Wie geht es weiter?', icon: PlayCircle },
     { id: 'help', title: 'Hilfe benötigt?', icon: Mail },
     { id: 'faq', title: 'FAQs', icon: HelpCircle }
   ];
@@ -58,6 +69,7 @@ const Training = () => {
     window.addEventListener('scroll', handleScroll);
     return () => window.removeEventListener('scroll', handleScroll);
   }, []);
+
 
   // Scroll to section
   const scrollToSection = (sectionId) => {
@@ -145,7 +157,7 @@ const Training = () => {
           <div id="einleitung" ref={(el) => sectionRefs.current['einleitung'] = el} className="mb-12">
             <div className="bg-gradient-to-r from-byght-turquoise/5 to-blue-50 border-l-4 border-byght-turquoise p-8 rounded-r-lg">
               <h2 className="text-2xl font-semibold text-gray-800 mb-6 flex items-center gap-2">
-                <Users className="text-byght-turquoise" size={28} />
+                <Rocket className="text-byght-turquoise" size={28} />
                 Einleitung
               </h2>
               <div className="prose prose-lg max-w-none text-gray-700">
@@ -177,7 +189,7 @@ const Training = () => {
           {/* Teil I: ISO 27001 */}
           <div id="teil1" ref={(el) => sectionRefs.current['teil1'] = el} className="mb-12">
             <h2 className="text-2xl font-semibold text-gray-800 mb-6 flex items-center gap-2">
-              <Upload className="text-byght-turquoise" size={28} />
+              <PlayCircle className="text-byght-turquoise" size={28} />
               Teil I: ISO 27001
             </h2>
             <VideoSection videoId="NmJzswjKuWY" title="ISMS SmartKit Training - Teil I: ISO 27001" />
@@ -240,7 +252,7 @@ const Training = () => {
           {/* Teil II: Customizing & Berechtigungen */}
           <div id="teil2" ref={(el) => sectionRefs.current['teil2'] = el} className="mb-12">
             <h2 className="text-2xl font-semibold text-gray-800 mb-6 flex items-center gap-2">
-              <Settings className="text-byght-turquoise" size={28} />
+              <PlayCircle className="text-byght-turquoise" size={28} />
               Teil II: Customizing & Berechtigungen
             </h2>
             <VideoSection videoId="6xWxsVrqZpc" title="ISMS SmartKit Training - Customizing & Berechtigungen" />
@@ -302,7 +314,7 @@ const Training = () => {
           {/* Teil III: Aufgabenbericht */}
           <div id="teil3" ref={(el) => sectionRefs.current['teil3'] = el} className="mb-12">
             <h2 className="text-2xl font-semibold text-gray-800 mb-6 flex items-center gap-2">
-              <FileCheck className="text-byght-turquoise" size={28} />
+              <PlayCircle className="text-byght-turquoise" size={28} />
               Teil III: Aufgabenbericht
             </h2>
             <VideoSection videoId="_EoVYcTIVVo" title="ISMS SmartKit Training - Aufgabenbericht" />
@@ -364,7 +376,7 @@ const Training = () => {
           {/* Teil IV: Die ersten 10 Aufgaben */}
           <div id="teil4" ref={(el) => sectionRefs.current['teil4'] = el} className="mb-12">
             <h2 className="text-2xl font-semibold text-gray-800 mb-6 flex items-center gap-2">
-              <CheckCircle className="text-byght-turquoise" size={28} />
+              <PlayCircle className="text-byght-turquoise" size={28} />
               Teil IV: Die ersten 10 Aufgaben
             </h2>
             <VideoSection />
@@ -426,7 +438,7 @@ const Training = () => {
           {/* Teil V: Richtlinien und Dokumentenlenkung */}
           <div id="teil5" ref={(el) => sectionRefs.current['teil5'] = el} className="mb-12">
             <h2 className="text-2xl font-semibold text-gray-800 mb-6 flex items-center gap-2">
-              <Folder className="text-byght-turquoise" size={28} />
+              <PlayCircle className="text-byght-turquoise" size={28} />
               Teil V: Richtlinien und Dokumentenlenkung
             </h2>
             <VideoSection />
@@ -442,20 +454,20 @@ const Training = () => {
                   <div className="bg-white p-4 rounded-lg shadow-sm">
                     <h4 className="font-semibold text-gray-800 mb-2 flex items-center gap-2">
                       <div className="w-6 h-6 bg-green-500 text-white rounded-full flex items-center justify-center text-sm font-bold">1</div>
-                      Lorem Ipsum Dolor
+                      Richtlinien-Anpassung unterschiedlicher Komplexität
                     </h4>
                     <p className="text-gray-600 text-sm">
-                      Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation.
+                      <strong>Unterschiedlicher Aufwand:</strong> Einige Richtlinien erfordern mehr Aufwand – besonders bei Reviews und Anpassungen an den Unternehmenskontext. Andere beziehen sich direkt auf ISMS-Module (z.B. Risikomanagement, Audits, Organisation) – hier kommt ihr schneller voran.
                     </p>
                   </div>
                   
                   <div className="bg-white p-4 rounded-lg shadow-sm">
                     <h4 className="font-semibold text-gray-800 mb-2 flex items-center gap-2">
                       <div className="w-6 h-6 bg-green-500 text-white rounded-full flex items-center justify-center text-sm font-bold">2</div>
-                      Consectetur Adipiscing
+                      Richtlinien an Realität anpassen
                     </h4>
                     <p className="text-gray-600 text-sm">
-                      Consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris.
+                      <strong>Gelebte Praxis statt Perfektion:</strong> Richtlinien sollten immer an die Realität eures Unternehmens angepasst werden. Mit gesundem Menschenverstand ist es in Ordnung, wenn das Sicherheitsniveau etwas unter den Standardformulierungen liegt. Entscheidend: Die Dokumente müssen gelebte Praxis widerspiegeln – lieber Verbesserungsvorschläge von Auditoren als perfekte Richtlinien, die nicht zur täglichen Arbeit passen.
                     </p>
                   </div>
                 </div>
@@ -464,20 +476,20 @@ const Training = () => {
                   <div className="bg-white p-4 rounded-lg shadow-sm">
                     <h4 className="font-semibold text-gray-800 mb-2 flex items-center gap-2">
                       <div className="w-6 h-6 bg-green-500 text-white rounded-full flex items-center justify-center text-sm font-bold">3</div>
-                      Sed Do Eiusmod
+                      Confluence Funktionen und Versionshistorie
                     </h4>
                     <p className="text-gray-600 text-sm">
-                      Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo.
+                      <strong>Ansichts- und Edit-Modus:</strong> Im Ansichtsmodus Kommentare abgeben (Inline oder am Seitenende), im Edit-Modus Inhalte wie in Word bearbeiten. Über die Seitenhistorie Änderungen nachvollziehen, Versionen vergleichen und wiederherstellen. <strong>Tipp:</strong> Versionshistorie bei erstmaliger Erstellung ignorieren, später bereinigen.
                     </p>
                   </div>
                   
                   <div className="bg-white p-4 rounded-lg shadow-sm">
                     <h4 className="font-semibold text-gray-800 mb-2 flex items-center gap-2">
                       <div className="w-6 h-6 bg-green-500 text-white rounded-full flex items-center justify-center text-sm font-bold">4</div>
-                      Tempor Incididunt
+                      Änderungskommentare und Kommunikation
                     </h4>
                     <p className="text-gray-600 text-sm">
-                      Tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.
+                      <strong>Änderungskommentare verwenden:</strong> Bei Anpassungen und Freigaben immer Kommentare hinterlassen (z.B. "Freigabe durch Geschäftsführung" oder "Kapitel Passwortsicherheit angepasst"). Richtlinien müssen kommuniziert und geschult werden – für bestehende Mitarbeitende ebenso wie für neue. Onboarding-Prozess entsprechend anpassen.
                     </p>
                   </div>
                 </div>
@@ -488,7 +500,7 @@ const Training = () => {
           {/* Teil VI: ISO 27001 Self Assessment & Anwendbarkeitserklärung */}
           <div id="teil6" ref={(el) => sectionRefs.current['teil6'] = el} className="mb-12">
             <h2 className="text-2xl font-semibold text-gray-800 mb-6 flex items-center gap-2">
-              <Cloud className="text-byght-turquoise" size={28} />
+              <PlayCircle className="text-byght-turquoise" size={28} />
               Teil VI: ISO 27001 Self Assessment & Anwendbarkeitserklärung
             </h2>
             <VideoSection />
@@ -504,20 +516,20 @@ const Training = () => {
                   <div className="bg-white p-4 rounded-lg shadow-sm">
                     <h4 className="font-semibold text-gray-800 mb-2 flex items-center gap-2">
                       <div className="w-6 h-6 bg-green-500 text-white rounded-full flex items-center justify-center text-sm font-bold">1</div>
-                      Lorem Ipsum Dolor
+                      Timing des Self-Assessments
                     </h4>
                     <p className="text-gray-600 text-sm">
-                      Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation.
+                      <strong>Optimale Zeit:</strong> Beste Vorbereitung auf ein Zertifizierungsaudit. Nicht ganz am Anfang machen (fehlender Kontext), aber auch nicht erst kurz vor dem Audit (daraus entstehen meist noch konkrete Maßnahmen). Im ISMS SmartKit daher etwa in der Mitte der Implementierungsphase vorgesehen.
                     </p>
                   </div>
                   
                   <div className="bg-white p-4 rounded-lg shadow-sm">
                     <h4 className="font-semibold text-gray-800 mb-2 flex items-center gap-2">
                       <div className="w-6 h-6 bg-green-500 text-white rounded-full flex items-center justify-center text-sm font-bold">2</div>
-                      Consectetur Adipiscing
+                      SPICE-Reifegradmodell
                     </h4>
                     <p className="text-gray-600 text-sm">
-                      Consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris.
+                      <strong>Bewertungsskala 0-5:</strong> Orientierung am SPICE-Reifegradmodell (0 = "Unvollständig" bis 5 = "Optimierend"). Typisch bei Erstzertifizierung: Viele Bereiche auf Reifegrad 2 (Gesteuert), gute Praxis auf 3, Entwicklungsbedarf auch auf 1 in Ordnung. Entscheidend: nachhaltige Verbesserung, nicht Höchstwerte.
                     </p>
                   </div>
                 </div>
@@ -526,20 +538,20 @@ const Training = () => {
                   <div className="bg-white p-4 rounded-lg shadow-sm">
                     <h4 className="font-semibold text-gray-800 mb-2 flex items-center gap-2">
                       <div className="w-6 h-6 bg-green-500 text-white rounded-full flex items-center justify-center text-sm font-bold">3</div>
-                      Sed Do Eiusmod
+                      Anwendbarkeitserklärung (SoA)
                     </h4>
                     <p className="text-gray-600 text-sm">
-                      Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo.
+                      <strong>Automatische Erstellung:</strong> Die Anwendbarkeitserklärung (Statement of Applicability, SoA) wird automatisch aus dem Self-Assessment erzeugt. Sie zeigt angewendete/nicht angewendete Controls und deren Begründung. Zentrales Dokument im Zertifizierungsaudit.
                     </p>
                   </div>
                   
                   <div className="bg-white p-4 rounded-lg shadow-sm">
                     <h4 className="font-semibold text-gray-800 mb-2 flex items-center gap-2">
                       <div className="w-6 h-6 bg-green-500 text-white rounded-full flex items-center justify-center text-sm font-bold">4</div>
-                      Tempor Incididunt
+                      Aufwand und Nutzen
                     </h4>
                     <p className="text-gray-600 text-sm">
-                      Tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.
+                      <strong>Lohnt sich:</strong> Neben Richtlinien und Risikomanagement gehört das Self-Assessment zu den größeren Aufwandstreibern. Aber es lohnt sich: Ihr bekommt ein klares, objektives Bild eures Umsetzungsstands und könnt gezielt priorisieren. In vielen Controls sind bereits Nachweise verlinkt, eigene können ergänzt werden.
                     </p>
                   </div>
                 </div>
@@ -547,91 +559,40 @@ const Training = () => {
             </div>
           </div>
 
-          {/* Teil VII: Fortlaufende Verbesserung und Maßnahmen */}
+
+          {/* Teil VII: Wie geht es weiter? */}
           <div id="teil7" ref={(el) => sectionRefs.current['teil7'] = el} className="mb-12">
             <h2 className="text-2xl font-semibold text-gray-800 mb-6 flex items-center gap-2">
-              <Key className="text-byght-turquoise" size={28} />
-              Teil VII: Fortlaufende Verbesserung und Maßnahmen
+              <PlayCircle className="text-byght-turquoise" size={28} />
+              Teil VII: Wie geht es weiter?
             </h2>
-            <VideoSection />
+            <VideoSection videoId="UwfbpFQUibw" title="ISMS SmartKit Training - Teil VII: Wie geht es weiter?" />
             
-            {/* Lessons Learned */}
-            <div className="mt-8 bg-gradient-to-r from-green-50 to-emerald-50 border-l-4 border-green-500 p-6 rounded-r-lg">
-              <h3 className="text-xl font-semibold text-gray-800 mb-4 flex items-center gap-2">
-                <CheckCircle className="text-green-500" size={24} />
-                Lessons Learned
-              </h3>
-              <div className="grid md:grid-cols-2 gap-6">
-                <div className="space-y-4">
-                  <div className="bg-white p-4 rounded-lg shadow-sm">
-                    <h4 className="font-semibold text-gray-800 mb-2 flex items-center gap-2">
-                      <div className="w-6 h-6 bg-green-500 text-white rounded-full flex items-center justify-center text-sm font-bold">1</div>
-                      Lorem Ipsum Dolor
-                    </h4>
-                    <p className="text-gray-600 text-sm">
-                      Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation.
-                    </p>
-                  </div>
-                  
-                  <div className="bg-white p-4 rounded-lg shadow-sm">
-                    <h4 className="font-semibold text-gray-800 mb-2 flex items-center gap-2">
-                      <div className="w-6 h-6 bg-green-500 text-white rounded-full flex items-center justify-center text-sm font-bold">2</div>
-                      Consectetur Adipiscing
-                    </h4>
-                    <p className="text-gray-600 text-sm">
-                      Consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris.
-                    </p>
-                  </div>
+            {/* Calendly Link - ToDo */}
+            <div className="mt-8 mb-8 bg-white border-2 border-dashed border-orange-400 p-6 rounded-lg shadow-lg">
+              <div className="flex items-start gap-3">
+                <div className="flex-shrink-0 w-8 h-8 bg-orange-500 rounded-full flex items-center justify-center">
+                  <span className="text-white text-sm font-bold">📋</span>
                 </div>
-                
-                <div className="space-y-4">
-                  <div className="bg-white p-4 rounded-lg shadow-sm">
-                    <h4 className="font-semibold text-gray-800 mb-2 flex items-center gap-2">
-                      <div className="w-6 h-6 bg-green-500 text-white rounded-full flex items-center justify-center text-sm font-bold">3</div>
-                      Sed Do Eiusmod
-                    </h4>
-                    <p className="text-gray-600 text-sm">
-                      Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo.
-                    </p>
-                  </div>
-                  
-                  <div className="bg-white p-4 rounded-lg shadow-sm">
-                    <h4 className="font-semibold text-gray-800 mb-2 flex items-center gap-2">
-                      <div className="w-6 h-6 bg-green-500 text-white rounded-full flex items-center justify-center text-sm font-bold">4</div>
-                      Tempor Incididunt
-                    </h4>
-                    <p className="text-gray-600 text-sm">
-                      Tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.
-                    </p>
-                  </div>
+                <div className="flex-1">
+                  <h4 className="font-bold text-gray-800 mb-3 text-lg">
+                    ToDo: Terminbuchung
+                  </h4>
+                  <p className="text-sm text-gray-700 mb-4 leading-relaxed">
+                    Du bist etwa mit den ersten 10 Aufgaben durch? Dann bucht das kostenfreie ISMS Coaching mit Byght.
+                  </p>
+                  <a 
+                    href="https://calendly.com/d/cmt4-tx9-fqf/einfuhrung-follow-up" 
+                    target="_blank" 
+                    rel="noopener noreferrer"
+                    className="inline-flex items-center gap-2 bg-orange-500 hover:bg-orange-600 text-white px-6 py-3 rounded-lg font-medium text-sm transition-colors shadow-md hover:shadow-lg"
+                  >
+                    <span>ISMS Coaching buchen</span>
+                    <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14" />
+                    </svg>
+                  </a>
                 </div>
-              </div>
-            </div>
-          </div>
-
-          {/* Teil VIII: Wie geht es weiter? */}
-          <div id="teil8" ref={(el) => sectionRefs.current['teil8'] = el} className="mb-12">
-            <h2 className="text-2xl font-semibold text-gray-800 mb-6 flex items-center gap-2">
-              <HelpCircle className="text-byght-turquoise" size={28} />
-              Teil VIII: Wie geht es weiter?
-            </h2>
-            <VideoSection videoId="UwfbpFQUibw" title="ISMS SmartKit Training - Teil VIII: Wie geht es weiter?" />
-            
-            {/* Calendly Link Platzhalter */}
-            <div className="mt-8 bg-gradient-to-r from-red-50 to-red-100 border-l-4 border-red-500 p-4 rounded-r-lg">
-              <h4 className="font-semibold text-gray-800 mb-3 flex items-center gap-2">
-                <div className="w-5 h-5 bg-red-500 rounded-full flex items-center justify-center">
-                  <span className="text-white text-xs font-bold">!</span>
-                </div>
-                Terminbuchung
-              </h4>
-              <p className="text-sm text-gray-700 mb-3">
-                Du bist etwa mit den ersten 10 Aufgaben durch? Dann bucht das kostenfreie ISMS Coaching mit Byght.
-              </p>
-              <div className="bg-red-200 border-2 border-dashed border-red-400 p-4 rounded-lg text-center">
-                <p className="text-red-700 font-medium text-sm">
-                  LINK ZU CALENDY HINZUFÜGEN
-                </p>
               </div>
             </div>
 
@@ -744,105 +705,27 @@ const Training = () => {
             </h2>
             
             <div className="space-y-3">
-              {/* Sample Question 1 */}
+              {/* ISO 27001 Frage */}
               <div className="border border-gray-200 rounded-lg overflow-hidden">
                 <button
-                  onClick={() => toggleFaq('sample1')}
+                  onClick={() => toggleFaq('iso27001')}
                   className="w-full px-5 py-4 text-left bg-white hover:bg-gray-50 focus:outline-none focus:bg-gray-50 transition-colors flex items-center justify-between"
                 >
                   <h3 className="font-semibold text-gray-800">
-                    Beispiel-Frage 1
+                    Sollte ich selber eine Version der ISO 27001 besitzen?
                   </h3>
                   <div className="flex-shrink-0 ml-4">
-                    {expandedFaq === 'sample1' ? (
+                    {expandedFaq === 'iso27001' ? (
                       <ChevronDown className="h-5 w-5 text-gray-500" />
                     ) : (
                       <ChevronRight className="h-5 w-5 text-gray-500" />
                     )}
                   </div>
                 </button>
-                {expandedFaq === 'sample1' && (
+                {expandedFaq === 'iso27001' && (
                   <div className="px-5 pb-4 bg-gray-50">
                     <p className="text-gray-600">
-                      Beispiel-Antwort 1
-                    </p>
-                  </div>
-                )}
-              </div>
-
-              {/* Sample Question 2 */}
-              <div className="border border-gray-200 rounded-lg overflow-hidden">
-                <button
-                  onClick={() => toggleFaq('sample2')}
-                  className="w-full px-5 py-4 text-left bg-white hover:bg-gray-50 focus:outline-none focus:bg-gray-50 transition-colors flex items-center justify-between"
-                >
-                  <h3 className="font-semibold text-gray-800">
-                    Beispiel-Frage 2
-                  </h3>
-                  <div className="flex-shrink-0 ml-4">
-                    {expandedFaq === 'sample2' ? (
-                      <ChevronDown className="h-5 w-5 text-gray-500" />
-                    ) : (
-                      <ChevronRight className="h-5 w-5 text-gray-500" />
-                    )}
-                  </div>
-                </button>
-                {expandedFaq === 'sample2' && (
-                  <div className="px-5 pb-4 bg-gray-50">
-                    <p className="text-gray-600">
-                      Beispiel-Antwort 2
-                    </p>
-                  </div>
-                )}
-              </div>
-
-              {/* Sample Question 3 */}
-              <div className="border border-gray-200 rounded-lg overflow-hidden">
-                <button
-                  onClick={() => toggleFaq('sample3')}
-                  className="w-full px-5 py-4 text-left bg-white hover:bg-gray-50 focus:outline-none focus:bg-gray-50 transition-colors flex items-center justify-between"
-                >
-                  <h3 className="font-semibold text-gray-800">
-                    Beispiel-Frage 3
-                  </h3>
-                  <div className="flex-shrink-0 ml-4">
-                    {expandedFaq === 'sample3' ? (
-                      <ChevronDown className="h-5 w-5 text-gray-500" />
-                    ) : (
-                      <ChevronRight className="h-5 w-5 text-gray-500" />
-                    )}
-                  </div>
-                </button>
-                {expandedFaq === 'sample3' && (
-                  <div className="px-5 pb-4 bg-gray-50">
-                    <p className="text-gray-600">
-                      Beispiel-Antwort 3
-                    </p>
-                  </div>
-                )}
-              </div>
-
-              {/* Sample Question 4 */}
-              <div className="border border-gray-200 rounded-lg overflow-hidden">
-                <button
-                  onClick={() => toggleFaq('sample4')}
-                  className="w-full px-5 py-4 text-left bg-white hover:bg-gray-50 focus:outline-none focus:bg-gray-50 transition-colors flex items-center justify-between"
-                >
-                  <h3 className="font-semibold text-gray-800">
-                    Beispiel-Frage 4
-                  </h3>
-                  <div className="flex-shrink-0 ml-4">
-                    {expandedFaq === 'sample4' ? (
-                      <ChevronDown className="h-5 w-5 text-gray-500" />
-                    ) : (
-                      <ChevronRight className="h-5 w-5 text-gray-500" />
-                    )}
-                  </div>
-                </button>
-                {expandedFaq === 'sample4' && (
-                  <div className="px-5 pb-4 bg-gray-50">
-                    <p className="text-gray-600">
-                      Beispiel-Antwort 4
+                      Ja. Solltet ihr eine Zertifizierung anstreben, solltet ihr eine mindestens eine Version der ISO 27001 selber besitzen.
                     </p>
                   </div>
                 )}
@@ -872,13 +755,59 @@ const Training = () => {
                             : 'text-gray-600 hover:bg-gray-100 hover:text-gray-800'
                         }`}
                       >
-                        <Icon size={16} />
+                        <Icon className="w-4 h-4 flex-shrink-0" />
                         <span className="text-sm font-medium">{item.title}</span>
                       </button>
                     );
                   })}
                 </nav>
               </div>
+            </div>
+          </div>
+        </div>
+        
+        {/* Easter Egg - Beppo der Straßenkehrer Zitat im Hintergrund */}
+        <div className="mt-20 text-center" ref={quoteRef}>
+          <style>{`
+            @keyframes fadeInWord {
+              from {
+                opacity: 0;
+                transform: translateY(10px);
+              }
+              to {
+                opacity: 1;
+                transform: translateY(0);
+              }
+            }
+            
+            .quote-word {
+              display: inline;
+              opacity: 0;
+              animation: fadeInWord 0.6s ease-out forwards;
+            }
+          `}</style>
+          
+          <div className="max-w-3xl mx-auto">
+            <div className="text-gray-600 text-base font-medium mb-2 tracking-wide">
+              Beppo der Straßenkehrer
+            </div>
+            <div className="text-gray-400 text-xs mb-8 italic">
+              aus „Momo" von Michael Ende
+            </div>
+            <div className="text-gray-600 text-lg italic leading-relaxed mb-8 whitespace-pre-line">
+              {fullQuote.split(/(\s+)/).map((word, index) => (
+                <span 
+                  key={index} 
+                  className="quote-word"
+                  style={{ animationDelay: `${index * 0.05}s` }}
+                >
+                  {word}
+                </span>
+              ))}
+            </div>
+            <div className="text-gray-400 text-xs mt-6 flex items-center justify-center gap-2">
+              <span className="text-lg">🧹</span>
+              <span>Ein kleiner Moment der Besinnung nach dem Training</span>
             </div>
           </div>
         </div>
