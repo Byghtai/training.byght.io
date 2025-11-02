@@ -379,7 +379,7 @@ Er nickte vor sich hin und sagte abschließend: „Das ist wichtig."`;
               <PlayCircle className="text-byght-turquoise" size={28} />
               Teil IV: Die ersten 10 Aufgaben
             </h2>
-            <VideoSection />
+            <VideoSection videoId="nws-G0BABrE" title="ISMS SmartKit Training - Teil IV: Die ersten 10 Aufgaben" />
             
             {/* Lessons Learned */}
             <div className="mt-8 bg-gradient-to-r from-green-50 to-emerald-50 border-l-4 border-green-500 p-6 rounded-r-lg">
@@ -441,7 +441,7 @@ Er nickte vor sich hin und sagte abschließend: „Das ist wichtig."`;
               <PlayCircle className="text-byght-turquoise" size={28} />
               Teil V: Richtlinien und Dokumentenlenkung
             </h2>
-            <VideoSection />
+            <VideoSection videoId="pzs09t-Aooo" title="ISMS SmartKit Training - Teil V: Richtlinien und Dokumentenlenkung" />
             
             {/* Lessons Learned */}
             <div className="mt-8 bg-gradient-to-r from-green-50 to-emerald-50 border-l-4 border-green-500 p-6 rounded-r-lg">
@@ -503,7 +503,7 @@ Er nickte vor sich hin und sagte abschließend: „Das ist wichtig."`;
               <PlayCircle className="text-byght-turquoise" size={28} />
               Teil VI: ISO 27001 Self Assessment & Anwendbarkeitserklärung
             </h2>
-            <VideoSection />
+            <VideoSection videoId="Tfoo0Smrx5E" title="ISMS SmartKit Training - Teil VI: ISO 27001 Self Assessment & Anwendbarkeitserklärung" />
             
             {/* Lessons Learned */}
             <div className="mt-8 bg-gradient-to-r from-green-50 to-emerald-50 border-l-4 border-green-500 p-6 rounded-r-lg">
