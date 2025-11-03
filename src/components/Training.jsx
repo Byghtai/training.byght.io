@@ -392,20 +392,10 @@ Er nickte vor sich hin und sagte abschließend: „Das ist wichtig."`;
                   <div className="bg-white p-4 rounded-lg shadow-sm">
                     <h4 className="font-semibold text-gray-800 mb-2 flex items-center gap-2">
                       <div className="w-6 h-6 bg-green-500 text-white rounded-full flex items-center justify-center text-sm font-bold">1</div>
-                      Vorlagen als lebende Dokumente
+                      Viel lernen mit den ersten 10 Aufgaben
                     </h4>
                     <p className="text-gray-600 text-sm">
-                      <strong>Anpassung ist erwünscht:</strong> Alle Vorlagen sind bewusst anpassbar und müssen auf den Unternehmenskontext zugeschnitten werden. Sie sind lebende Dokumente, die Jahr für Jahr mit Erfahrungen und Alltagserkenntnissen weiterentwickelt werden.
-                    </p>
-                  </div>
-                  
-                  <div className="bg-white p-4 rounded-lg shadow-sm">
-                    <h4 className="font-semibold text-gray-800 mb-2 flex items-center gap-2">
-                      <div className="w-6 h-6 bg-green-500 text-white rounded-full flex items-center justify-center text-sm font-bold">2</div>
-                      Organisationsdiagramm flexibel handhaben
-                    </h4>
-                    <p className="text-gray-600 text-sm">
-                      <strong>Upload oder Verlinkung:</strong> Das Organisationsdiagramm kann direkt hochgeladen und eingebettet oder einfach verlinkt werden. Wichtig: Rollen und Verantwortlichkeiten im ISMS und Datenschutz müssen dargestellt sein.
+                      Mit den ersten 10 Aufgaben lernt ihr bereits viel über euer ISMS, indem ihr Rollen und Verantwortlichkeiten festlegt und den Geltungsbereich definiert.
                     </p>
                   </div>
                 </div>
@@ -413,21 +403,24 @@ Er nickte vor sich hin und sagte abschließend: „Das ist wichtig."`;
                 <div className="space-y-4">
                   <div className="bg-white p-4 rounded-lg shadow-sm">
                     <h4 className="font-semibold text-gray-800 mb-2 flex items-center gap-2">
-                      <div className="w-6 h-6 bg-green-500 text-white rounded-full flex items-center justify-center text-sm font-bold">3</div>
-                      Bestellungsurkunden als Nachweis
+                      <div className="w-6 h-6 bg-green-500 text-white rounded-full flex items-center justify-center text-sm font-bold">2</div>
+                      Kostenfreies ISMS-Coaching
                     </h4>
                     <p className="text-gray-600 text-sm">
-                      <strong>Audit-Nachweis:</strong> Die Bestellungsurkunde für den Informationssicherheitsbeauftragten ist meist ein wichtiger Nachweis in Zertifizierungsaudits. Wichtig: Von Geschäftsführung und ISB unterschreiben lassen und im ISMS SmartKit ablegen.
-                    </p>
-                  </div>
-                  
-                  <div className="bg-white p-4 rounded-lg shadow-sm">
-                    <h4 className="font-semibold text-gray-800 mb-2 flex items-center gap-2">
-                      <div className="w-6 h-6 bg-green-500 text-white rounded-full flex items-center justify-center text-sm font-bold">4</div>
-                      Geltungsbereich prägnant formulieren
-                    </h4>
-                    <p className="text-gray-600 text-sm">
-                      <strong>Klare Definition:</strong> Der Geltungsbereich definiert, welche Teile des Unternehmens und welche Tätigkeiten vom ISMS erfasst werden. Formulierung prägnant halten und an Beispielen orientieren. Wird oft mehrmals angepasst, bis die finale Version steht.
+                      Am besten bucht ihr nach Abschluss der ersten 10 Aufgaben unser kostenfreies ISMS-Coaching. In diesem klären wir offene Fragen, geben Feedback und stimmen die nächsten Schritte mit euch ab. Am Ende des Trainings findet ihr den Link dazu{' '}
+                      <a 
+                        href="#todo-terminbuchung" 
+                        className="text-byght-turquoise hover:text-byght-turquoise/80 font-medium underline"
+                        onClick={(e) => {
+                          e.preventDefault();
+                          const element = document.getElementById('todo-terminbuchung');
+                          if (element) {
+                            element.scrollIntoView({ behavior: 'smooth', block: 'start' });
+                          }
+                        }}
+                      >
+                        (→ hier)
+                      </a>.
                     </p>
                   </div>
                 </div>
@@ -569,7 +562,7 @@ Er nickte vor sich hin und sagte abschließend: „Das ist wichtig."`;
             <VideoSection videoId="UwfbpFQUibw" title="ISMS SmartKit Training - Teil VII: Wie geht es weiter?" />
             
             {/* Calendly Link - ToDo */}
-            <div className="mt-8 mb-8 bg-white border-2 border-dashed border-orange-400 p-6 rounded-lg shadow-lg">
+            <div id="todo-terminbuchung" className="mt-8 mb-8 bg-white border-2 border-dashed border-orange-400 p-6 rounded-lg shadow-lg">
               <div className="flex items-start gap-3">
                 <div className="flex-shrink-0 w-8 h-8 bg-orange-500 rounded-full flex items-center justify-center">
                   <span className="text-white text-sm font-bold">📋</span>
