@@ -1,10 +1,18 @@
 import React from 'react';
 import { Play } from 'lucide-react';
 
-const VideoSection = ({ videoId = 'pLHLB3d1sm0', title = 'ISMS SmartKit Training Introduction' }) => {
+const VideoSection = ({ videoId = 'pLHLB3d1sm0', title = 'ISMS SmartKit Training Introduction', language = 'de' }) => {
   // YouTube Video ID aus der URL extrahieren
   const youtubeVideoId = videoId;
-  const youtubeEmbedUrl = `https://www.youtube.com/embed/${youtubeVideoId}`;
+  
+  // YouTube Embed URL mit Parametern für Untertitel
+  // cc_lang_pref=en-GB für britische Untertitel, cc_load_policy=1 zum automatischen Laden
+  let youtubeEmbedUrl = `https://www.youtube.com/embed/${youtubeVideoId}`;
+  
+  if (language === 'en') {
+    // Für Englisch: britische Untertitel aktivieren
+    youtubeEmbedUrl += '?cc_lang_pref=en-GB&cc_load_policy=1';
+  }
 
   return (
     <div>
