@@ -94,12 +94,12 @@ Er nickte vor sich hin und sagte abschließend: „Das ist wichtig."`,
       lessonsLearned: 'Lessons Learned',
       helpText: 'We are happy to help.',
       contact: '📧 Contact:',
-      fullQuote: `"You must never think of the whole street at once, understand? You must only concentrate on the next step, the next breath, the next stroke of the broom." He paused again and reflected before adding: "That makes it fun; that's important, then you do your job well. And so it should be."
+      fullQuote: `'You must never think of the whole street at once, understand? You must only concentrate on the next step, the next breath, the next stroke of the broom, and the next, and the next. Nothing else.'
 
-And after another long pause he continued: "Suddenly you notice that you've done the whole street step by step. You didn't notice how, and you're not out of breath."
+Again he paused for thought before adding, 'That way you enjoy your work, which is important, because then you make a good job of it. And that's how it ought to be.'
 
-He nodded to himself and said finally: "That's important."`,
-      quoteAuthor: 'Beppo the Street Sweeper',
+There was another long silence. At last he went on, 'And all at once, before you know it, you find you've swept the whole street clean, bit by bit. What's more, you aren't out of breath.' He nodded to himself. 'That's important, too,' he concluded.`,
+      quoteAuthor: 'Beppo Roadsweeper',
       quoteSource: 'from "Momo" by Michael Ende',
       quoteNote: 'A small moment of reflection after training'
     }
