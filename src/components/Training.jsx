@@ -4,21 +4,26 @@ import { useNavigate } from 'react-router-dom';
 import { LogOut, Menu, X, Cloud, Key, CheckCircle, Upload, Users, FileCheck, HelpCircle, Mail, ChevronRight, ChevronDown, Settings, Download, Folder, PlayCircle, Video, BookOpen, Play, Rocket } from 'lucide-react';
 import ByghtLogo from '../assets/byght-logo.svg';
 import VideoSection from './VideoSection';
+import { getLanguagePreference } from '../utils/language';
 
 const Training = () => {
   const { user, logout } = useAuth();
   const navigate = useNavigate();
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   
-  // Load language from localStorage or default to 'de'
+  // Load language from localStorage or detect from browser
   const [language, setLanguage] = useState(() => {
-    const savedLanguage = localStorage.getItem('training-language');
-    return savedLanguage || 'de';
+    return getLanguagePreference();
   });
   
-  // Save language to localStorage whenever it changes
+  // Save language to localStorage whenever it changes (only if manually changed)
   useEffect(() => {
-    localStorage.setItem('training-language', language);
+    // Only save if language was manually changed, not on initial load
+    // The getLanguagePreference function already saves detected language
+    const savedLanguage = localStorage.getItem('training-language');
+    if (savedLanguage !== language) {
+      localStorage.setItem('training-language', language);
+    }
   }, [language]);
   
   // FAQ collapse states
@@ -339,7 +344,7 @@ There was another long silence. At last he went on, 'And all at once, before you
               <PlayCircle className="text-byght-turquoise" size={28} />
               {t.teil1}
             </h2>
-            <VideoSection videoId="NmJzswjKuWY" title={`ISMS SmartKit Training - ${t.teil1}`} language={language} />
+            <VideoSection videoId={language === 'en' ? 'yooGiSI77Ps' : 'NmJzswjKuWY'} title={`ISMS SmartKit Training - ${t.teil1}`} language={language} />
             
             {/* Lessons Learned */}
             <div className="mt-8 bg-gradient-to-r from-green-50 to-emerald-50 border-l-4 border-green-500 p-6 rounded-r-lg">
@@ -409,7 +414,7 @@ There was another long silence. At last he went on, 'And all at once, before you
               <PlayCircle className="text-byght-turquoise" size={28} />
               {t.teil2}
             </h2>
-            <VideoSection videoId="6xWxsVrqZpc" title={`ISMS SmartKit Training - ${t.teil2}`} language={language} />
+            <VideoSection videoId={language === 'en' ? 'zkSu-b28DLE' : '6xWxsVrqZpc'} title={`ISMS SmartKit Training - ${t.teil2}`} language={language} />
             
             {/* Lessons Learned */}
             <div className="mt-8 bg-gradient-to-r from-green-50 to-emerald-50 border-l-4 border-green-500 p-6 rounded-r-lg">
@@ -471,7 +476,7 @@ There was another long silence. At last he went on, 'And all at once, before you
               <PlayCircle className="text-byght-turquoise" size={28} />
               {t.teil3}
             </h2>
-            <VideoSection videoId="_EoVYcTIVVo" title={`ISMS SmartKit Training - ${t.teil3}`} language={language} />
+            <VideoSection videoId={language === 'en' ? 'CG5isqPd5Vc' : '_EoVYcTIVVo'} title={`ISMS SmartKit Training - ${t.teil3}`} language={language} />
             
             {/* Lessons Learned */}
             <div className="mt-8 bg-gradient-to-r from-green-50 to-emerald-50 border-l-4 border-green-500 p-6 rounded-r-lg">
@@ -533,7 +538,7 @@ There was another long silence. At last he went on, 'And all at once, before you
               <PlayCircle className="text-byght-turquoise" size={28} />
               {t.teil4}
             </h2>
-            <VideoSection videoId="nws-G0BABrE" title={`ISMS SmartKit Training - ${t.teil4}`} language={language} />
+            <VideoSection videoId={language === 'en' ? 'kV7WGk-tAzE' : 'nws-G0BABrE'} title={`ISMS SmartKit Training - ${t.teil4}`} language={language} />
             
             {/* Lessons Learned */}
             <div className="mt-8 bg-gradient-to-r from-green-50 to-emerald-50 border-l-4 border-green-500 p-6 rounded-r-lg">
@@ -609,7 +614,7 @@ There was another long silence. At last he went on, 'And all at once, before you
               <PlayCircle className="text-byght-turquoise" size={28} />
               {t.teil5}
             </h2>
-            <VideoSection videoId="pzs09t-Aooo" title={`ISMS SmartKit Training - ${t.teil5}`} language={language} />
+            <VideoSection videoId={language === 'en' ? 'EqXI_OK0o_Y' : 'pzs09t-Aooo'} title={`ISMS SmartKit Training - ${t.teil5}`} language={language} />
             
             {/* Lessons Learned */}
             <div className="mt-8 bg-gradient-to-r from-green-50 to-emerald-50 border-l-4 border-green-500 p-6 rounded-r-lg">
@@ -672,7 +677,7 @@ There was another long silence. At last he went on, 'And all at once, before you
               <PlayCircle className="text-byght-turquoise" size={28} />
               {t.teil6}
             </h2>
-            <VideoSection videoId="Tfoo0Smrx5E" title={`ISMS SmartKit Training - ${t.teil6}`} language={language} />
+            <VideoSection videoId={language === 'en' ? 'kthlDmjVU2Y' : 'Tfoo0Smrx5E'} title={`ISMS SmartKit Training - ${t.teil6}`} language={language} />
             
             {/* Lessons Learned */}
             <div className="mt-8 bg-gradient-to-r from-green-50 to-emerald-50 border-l-4 border-green-500 p-6 rounded-r-lg">
@@ -735,7 +740,7 @@ There was another long silence. At last he went on, 'And all at once, before you
               <PlayCircle className="text-byght-turquoise" size={28} />
               {t.teil7}
             </h2>
-            <VideoSection videoId="UwfbpFQUibw" title={`ISMS SmartKit Training - ${t.teil7}`} language={language} />
+            <VideoSection videoId={language === 'en' ? 'OESSbtJ6VSw' : 'UwfbpFQUibw'} title={`ISMS SmartKit Training - ${t.teil7}`} language={language} />
             
             {/* Calendly Link - ToDo */}
             <div id="todo-terminbuchung" className="mt-8 mb-8 bg-white border-2 border-dashed border-orange-400 p-6 rounded-lg shadow-lg">

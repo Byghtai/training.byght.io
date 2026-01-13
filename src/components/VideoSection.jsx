@@ -5,14 +5,8 @@ const VideoSection = ({ videoId = 'pLHLB3d1sm0', title = 'ISMS SmartKit Training
   // YouTube Video ID aus der URL extrahieren
   const youtubeVideoId = videoId;
   
-  // YouTube Embed URL mit Parametern für Untertitel
-  // cc_lang_pref=en-GB für britische Untertitel, cc_load_policy=1 zum automatischen Laden
+  // YouTube Embed URL
   let youtubeEmbedUrl = `https://www.youtube.com/embed/${youtubeVideoId}`;
-  
-  if (language === 'en') {
-    // Für Englisch: britische Untertitel aktivieren
-    youtubeEmbedUrl += '?cc_lang_pref=en-GB&cc_load_policy=1';
-  }
 
   return (
     <div>

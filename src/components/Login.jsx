@@ -3,6 +3,7 @@ import { useNavigate } from 'react-router-dom';
 import { useAuth } from '../contexts/AuthContext';
 import { Lock, AlertCircle, Eye, EyeOff } from 'lucide-react';
 import ByghtLogo from '../assets/byght-logo.svg';
+import { getLanguagePreference } from '../utils/language';
 
 const Login = () => {
   const [password, setPassword] = useState('');
@@ -12,15 +13,19 @@ const Login = () => {
   const navigate = useNavigate();
   const { login } = useAuth();
   
-  // Load language from localStorage or default to 'de'
+  // Load language from localStorage or detect from browser
   const [language, setLanguage] = useState(() => {
-    const savedLanguage = localStorage.getItem('training-language');
-    return savedLanguage || 'de';
+    return getLanguagePreference();
   });
   
-  // Save language to localStorage whenever it changes
+  // Save language to localStorage whenever it changes (only if manually changed)
   useEffect(() => {
-    localStorage.setItem('training-language', language);
+    // Only save if language was manually changed, not on initial load
+    // The getLanguagePreference function already saves detected language
+    const savedLanguage = localStorage.getItem('training-language');
+    if (savedLanguage !== language) {
+      localStorage.setItem('training-language', language);
+    }
   }, [language]);
   
   // Translations
