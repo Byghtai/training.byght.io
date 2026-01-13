@@ -779,6 +779,11 @@ There was another long silence. At last he went on, 'And all at once, before you
               <p className="text-sm text-gray-700 mb-3">
                 {language === 'de' ? 'Vertiefe dein Wissen mit zusätzlichen Lerninhalten zum ISMS-Aufbau:' : 'Deepen your knowledge with additional learning content on ISMS development:'}
               </p>
+              {language === 'en' && (
+                <p className="text-sm text-amber-600 mb-3 font-medium">
+                  ⚠️ Note: The content behind this link is only available in German.
+                </p>
+              )}
               <a 
                 href="https://byght.io/iso_27001_wissen/" 
                 target="_blank" 
