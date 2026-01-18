@@ -677,7 +677,7 @@ There was another long silence. At last he went on, 'And all at once, before you
               <PlayCircle className="text-byght-turquoise" size={28} />
               {t.teil6}
             </h2>
-            <VideoSection videoId={language === 'en' ? 'kthlDmjVU2Y' : 'Tfoo0Smrx5E'} title={`ISMS SmartKit Training - ${t.teil6}`} language={language} />
+            <VideoSection videoId="WkU2sbneMIc" title={`ISMS SmartKit Training - ${t.teil6}`} language={language} />
             
             {/* Lessons Learned */}
             <div className="mt-8 bg-gradient-to-r from-green-50 to-emerald-50 border-l-4 border-green-500 p-6 rounded-r-lg">
